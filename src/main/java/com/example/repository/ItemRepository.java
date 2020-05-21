@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -36,9 +37,11 @@ public class ItemRepository {
 	 * 商品一覧を取得.
 	 * @return
 	 */
-	public List<Item> findAll(){
-		String sql = "SELECT * FROM items  ";
-		List<Item> itemList = template.query(sql,ITEM_ROW_MAPPER );
+	public List<Item> findAll(Integer offset){
+		String sql = "SELECT * FROM items LIMIT 20 offset :offset ";
+		MapSqlParameterSource param = new MapSqlParameterSource().addValue("offset", offset);
+
+		List<Item> itemList = template.query(sql,param,ITEM_ROW_MAPPER );
 		return itemList;
 		
 	}
