@@ -16,6 +16,29 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <title>Rakus Items</title>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- <script th:src="@{/js/Category.js}"></script> -->
+
+<script type="text/javascript">
+
+function submit(value) {
+	//const chyCategory=document.form1.parent
+	// window.location.href = selected.value;
+	//const id = chuCategory.selected.value;
+	//var id=document.getElementById("id").value;
+	var id=value;
+	var selectedValue = $("#parent").val();
+		form1.submit();
+}
+function submit2(value) {
+	//const chyCategory=document.form1.parent
+	// window.location.href = selected.value;
+	//const id = chuCategory.selected.value;
+	//var id=document.getElementById("id").value;
+	var id=value;
+		form1.submit();
+}
+</script>
 </head>
 <body>
   <!-- navbar -->
@@ -48,42 +71,33 @@
 
     <!-- 検索フォーム -->
     <div id="forms">
-    <form th:action="@{/}" method="post">
-		<input name="page" type="text">
+      <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" th:object="${searchForm}">
+        <input name="page" type="text">
 		<button type="submit">ページへ</button>
-	</form>
-    
-      <form action="" class="form-inline" role="form" th:action="@{/}">
-      
-      
         <div class="form-group">
           <input type="input" class="form-control" id="name" placeholder="item name"/>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <select class="form-control">
-            <option>- parentCategory -</option>
-            <option>parentCategory1</option>
-            <option>parentCategory2</option>
-            <option>parentCategory3</option>
-            <option>parentCategory4</option>
-            <option>parentCategory5</option>
+          <select class="form-control" id="parent" name="Parent" onchange="submit(this.value)">
+            <option value="null">- parentCategory -</option>
+            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}" th:name="${parentCategory.id}">
+             	<input tepe="hidden" name="parentCategory.id" th:value="${parentCategory.id}">
+             </option>
+           
           </select>
-          <select class="form-control">
-            <option>- childCategory -</option>
-            <option>childCategory1</option>
-            <option>childCategory2</option>
-            <option>childCategory3</option>
-            <option>childCategory4</option>
-            <option>childCategory5</option>
+         <!-- <form th:action="@{/searchCategory}" method="post"-->
+         
+            <select class="form-control" id="chuCategory" name="chuCategory" onchange="submit2(this.value)">
+            <option value="null">- childCategory -</option>
+            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{name}" >- childCategory -</option>
+       
           </select>
+          <!--/form-->
           <select class="form-control">
-            <option>- grandChild -</option>
-            <option>grandChild1</option>
-            <option>grandChild2</option>
-            <option>grandChild3</option>
-            <option>grandChild4</option>
-            <option>grandChild5</option>
+            <option value="null">- grandChild -</option>
+            <option th:each="childCategory : ${childCategoryList}" th:value="${childCategory.id}" th:text="${childCategory.name}" >grandChild1</option>
+            
           </select>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
@@ -109,12 +123,20 @@
     <div class="table-responsive">
       <table id="item-table" class="table table-hover table-condensed">
         <thead>
-          <tr th:each="item : ${itemList}">
-            <th th:text="${item.name}">name</th>
-            <th th:text="${item.price}">price</th>
-            <th th:text="${item.category}">category</th>
-            <th rh:text="${item.brand}">brand</th>
+         <thead>
+          </tr>
+        	<th>name</th>
+            <th>price</th>
+            <th>category</th>
+            <th>brand</th>
             <th>cond</th>
+          <tr th:each="item : ${itemList}">
+            <td ><a th:text="${item.name}" th:href="@{'/showItemDetail?id='+${item.id}}" >name</a></th>
+            <td th:text="${item.price}">price</td>
+            <td th:text="${item.nameAll}">category</td>
+            <td th:if="${item.nameAll}"></td>
+            <td th:text="${item.brand}">brand</td>
+            <td th:text="${item.condition}">cond</td>
           </tr>
         </thead>
         <tbody>
@@ -122,6 +144,18 @@
         </tbody>
       </table>
     </div>
+    
+    
+    
+     <!--  script type="text/javascript">
+　 				<$(function() {
+　 				    $("#parentCategory").on("change", function(){
+　 				    	var id=$("#id").val();
+　 				    	
+　 				    });
+　 				    	location.href()="/?id"+id;
+　 				    }
+			</script-->
 
     <!-- pagination -->
     <div class="pages">

@@ -5,6 +5,7 @@ package com.example.domain;
  * @author ashibe
  *
  */
+
 public class Category {
 	
 	/**
@@ -18,7 +19,7 @@ public class Category {
 	/**
 	 * 親のカテゴリID
 	 */
-	private Integer parent_id; 
+	private Integer parent; 
 	/**
 	 * 
 	 */
@@ -35,11 +36,11 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getParent_id() {
-		return parent_id;
+	public Integer getParent() {
+		return parent;
 	}
-	public void setParent_id(Integer parent_id) {
-		this.parent_id = parent_id;
+	public void setParent(Integer parent) {
+		this.parent = parent;
 	}
 	public String getNameAll() {
 		return nameAll;
@@ -49,7 +50,7 @@ public class Category {
 	}
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", parent_id=" + parent_id + ", nameAll=" + nameAll + "]";
+		return "Category [id=" + id + ", name=" + name + ", parent=" + parent + ", nameAll=" + nameAll + "]";
 	}
 	
 	

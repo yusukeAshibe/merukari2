@@ -26,4 +26,8 @@ public class ItemService {
 		return itemList;
 
 	}
+	
+	public Item showDetail(Integer id) {
+		return itemRepository.load(id);
+	}
 }
