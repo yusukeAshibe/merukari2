@@ -81,8 +81,8 @@ function submit2(value) {
         <div class="form-group">
           <select class="form-control" id="parent" name="Parent" onchange="submit(this.value)">
             <option value="null">- parentCategory -</option>
-            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}" th:name="${parentCategory.id}">
-             	<input tepe="hidden" name="parentCategory.id" th:value="${parentCategory.id}">
+            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}" th:name="${parentCategory.id}" th:field="*{parent}">
+             	<input tepe="hidden" th:name="${parentCategory.id}" th:value="${parentCategory.id}">
              </option>
            
           </select>
@@ -90,7 +90,7 @@ function submit2(value) {
          
             <select class="form-control" id="chuCategory" name="chuCategory" onchange="submit2(this.value)">
             <option value="null">- childCategory -</option>
-            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{name}" >- childCategory -</option>
+            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{chuCategory}" >- childCategory -</option>
        
           </select>
           <!--/form-->
