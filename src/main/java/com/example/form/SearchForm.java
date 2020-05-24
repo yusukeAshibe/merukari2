@@ -8,10 +8,14 @@ public class SearchForm {
 	
 	private String parent;
 	
-	private String chuCategory;
+	private  String chuCategory=null;
 	
 	public  Integer parseInt(String parent) {
 	 return new Integer(parent);
+	}
+	
+	public Integer parseInt2(String chuCategory) {
+		return new Integer(chuCategory);
 	}
 
 	public String getId() {
@@ -37,6 +41,8 @@ public class SearchForm {
 	public void setParent(String parent) {
 		this.parent = parent;
 	}
+
+	
 
 	public String getChuCategory() {
 		return chuCategory;

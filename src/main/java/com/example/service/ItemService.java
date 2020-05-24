@@ -30,4 +30,13 @@ public class ItemService {
 	public Item showDetail(Integer id) {
 		return itemRepository.load(id);
 	}
+	public List<Item>searchItem(String name,Integer page){
+		Integer offset = 0;
+		if (page != null) {
+			Integer limit = 20;
+			offset = limit * (page - 1);
+		}
+		List<Item> itemList =itemRepository.itemList(name, offset);
+		return itemList;
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import com.example.domain.Item;
 /**
@@ -61,4 +62,14 @@ public class ItemRepository {
 		return item;
 
 	}
+	
+	
+	public List<Item> itemList(String name,Integer offset){
+		String sql = "SELECT * FROM items WHERE name LIKE :name LIMIT 20 offset :offset ";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+name+"%").addValue("offset", offset);;
+		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER);
+		return itemList;
+
+	}
+   
 }

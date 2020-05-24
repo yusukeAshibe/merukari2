@@ -37,7 +37,7 @@ public class CategoryRepository {
 	 * @return　親カテゴリ
 	 */
 	public List<Category> parentCategoryList(){
-		String sql =" select * from category where id between 1 and 10   ";
+		String sql =" select * from category where parent is null ";
 		List <Category> parentCategoryList = template.query(sql, ITEM_ROW_MAPPER);
 		return parentCategoryList;
 	}

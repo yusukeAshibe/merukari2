@@ -75,11 +75,11 @@ function submit2(value) {
         <input name="page" type="text">
 		<button type="submit">ページへ</button>
         <div class="form-group">
-          <input type="input" class="form-control" id="name" placeholder="item name"/>
+          <input type="input" class="form-control" id="name" name="name"placeholder="item name"/>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <select class="form-control" id="parent" name="Parent" onchange="submit(this.value)">
+          <select class="form-control" id="parent" name="parent" onchange="submit(this.value)">
             <option value="null">- parentCategory -</option>
             <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}" th:name="${parentCategory.id}" th:field="*{parent}">
              	<input tepe="hidden" th:name="${parentCategory.id}" th:value="${parentCategory.id}">
@@ -90,7 +90,7 @@ function submit2(value) {
          
             <select class="form-control" id="chuCategory" name="chuCategory" onchange="submit2(this.value)">
             <option value="null">- childCategory -</option>
-            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{chuCategory}" >- childCategory -</option>
+            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{chuCategory}" th:id="${category.id}">- childCategory -</option>
        
           </select>
           <!--/form-->
