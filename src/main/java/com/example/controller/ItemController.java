@@ -2,8 +2,11 @@ package com.example.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,10 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Category;
 import com.example.domain.Item;
+import com.example.domain.LoginUser;
+import com.example.domain.User;
 import com.example.form.SearchForm;
 import com.example.service.CategoryService;
 import com.example.service.ItemService;
+import com.example.service.UserService;
 
+/**
+ * アイテム関連の操作をするコントローラ.
+ * @author ashibe
+ *
+ */
 @Controller
 @RequestMapping("/")
 public class ItemController {
@@ -24,46 +35,116 @@ public class ItemController {
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private UserService userService;
 
 	@ModelAttribute
 	public SearchForm setUpSearchForm() {
 		return new SearchForm();
 	}
 
+	/**
+	 *アイテム一覧画面内での挙動関連.
+	 * @param model
+	 * @param form
+	 * @param page
+	 * @return
+	 */
 	@RequestMapping("/")
-	public String showItem(Model model, SearchForm form, Integer page, String parent) {// parentは親カテゴリのID
-		List<Item> itemList=new ArrayList<>();
-		 itemList=itemService.showItem(page);
-		model.addAttribute("itemList", itemList);
-		List<Category> parentCategoryList = categoryService.parentCategoryList();
-		model.addAttribute("parentCategoryList", parentCategoryList);
-		System.out.println(form);
-		if(form.getName()!=null) {
-			itemList=itemService.searchItem(form.getName(), page);
-		}
-		// 大カテゴリー0のプルダウンがちぇんじされ場合は
-		// 中カテゴリーを検索して、modelにセットっとする
-
-		if (form.getParent() != null && form.getName() == null) {
-			System.out.println(form);
-			List<Category> categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
-			List<Category> childCategoryList = new ArrayList<>();
-			if (form.getChuCategory() != null) {
-				// childCategoryList =
-				// categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
-			}
-
-			model.addAttribute("categoryList", categoryList);
-			model.addAttribute("childCategoryList", childCategoryList);
-			
-			
-		}
+	public String showItem(Model model, SearchForm form, Integer page,@AuthenticationPrincipal LoginUser loginUser) {// parentは親カテゴリのID
 		
+		if(loginUser!=null) {
+		String userEmail= loginUser.getUser().getEmail();
+		model.addAttribute("email",userEmail);
+		}
+		//初期の画面遷移
+	if(form.getId()==null&&form.getChuCategory()==null&&form.getSyoCategory()==null&&form.getName()==null){
+		List<Item> itemList = new ArrayList<>();
+		List<Category> parentCategoryList = categoryService.parentCategoryList();
+		List<Category> categoryList = new ArrayList<>();
+		List<Category> childCategoryList = new ArrayList<>();
+		itemList = itemService.showItem(page);
+		model.addAttribute("parentCategoryList", parentCategoryList);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("childCategoryList", childCategoryList);
+		model.addAttribute("itemList", itemList);
+		return "list.html";
+		
+	}
+	
+	//大カテゴリが選択されていない場合
+			if(form.getParent()!=null&&form.getParent().equals("")) {
+				List<Item> itemList = new ArrayList<>();
+				List<Category> parentCategoryList = categoryService.parentCategoryList();
+				List<Category> categoryList = new ArrayList<>();
+				List<Category> childCategoryList = new ArrayList<>();
+				itemList = itemService.showItem(page);
+				model.addAttribute("parentCategoryList", parentCategoryList);
+				model.addAttribute("categoryList", categoryList);
+				model.addAttribute("childCategoryList", childCategoryList);
+				model.addAttribute("itemList", itemList);
+				return "list.html";
+				
+			}
+	
+	List<Item> itemList = new ArrayList<>();
+	List<Category> parentCategoryList = categoryService.parentCategoryList();
+	List<Category> categoryList = new ArrayList<>();
+	List<Category> childCategoryList = new ArrayList<>();
+	itemList = itemService.showItem(page);
 
+		parentCategoryList = categoryService.parentCategoryList();
+
+		
+		//中カテゴリの値の変更
+		if (form.getParent() != null && (form.getChuCategory().equals(""))) {
+			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+
+		}
+		//小カテゴリの値の変更
+		if (form.getParent() != null && !(form.getChuCategory().equals(""))) {
+			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
+		
+		}
+
+		// 大中小すべてのカテゴリが選択
+		if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals(""))
+				&& form.getSyoCategory() != null && !form.getSyoCategory().equals(""))) {
+
+			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
+					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()), page);
+			
+			// 大中カテゴリの選択をした場合
+		} else if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals("")))) {
+			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
+					Integer.parseInt(form.getChuCategory()), page);
+			
+			// 大カテゴリまでの検索時
+		} else if ((form.getParent() != null && !form.getParent().equals(""))) {
+			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page);
+		}
+//		}else if(form.getParent().equals("")&&form.getChuCategory().equals("")&&form.getSyoCategory().equals("")) {
+//			itemList = itemService.showItem(page);
+//			parentCategoryList = categoryService.parentCategoryList();
+//			
+//		}
+		
+		
+		model.addAttribute("parentCategoryList", parentCategoryList);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("childCategoryList", childCategoryList);
+		model.addAttribute("itemList", itemList);
 		return "list.html";
 
 	}
 
+	/**詳細画面遷移.
+	 * @param id
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/showItemDetail")
 	public String showItemDetail(Integer id, Model model) {
 		Item item = itemService.showDetail(id);

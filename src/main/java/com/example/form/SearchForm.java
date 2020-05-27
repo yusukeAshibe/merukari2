@@ -1,21 +1,39 @@
 package com.example.form;
 
+/**
+ * 入力された検索条件を受け取るフォーム,
+ * @author ashibe
+ *
+ */
 public class SearchForm {
-	
+
+	/**
+	 * ID
+	 */
 	private String id;
-	
+
+	/**
+	 * 商品名
+	 */
 	private String name;
-	
+
+	/**
+	 * 大カテゴリID
+	 */
 	private String parent;
+
+	/**
+	 * 中カテゴリID
+	 */
+	private String chuCategory;
 	
-	private  String chuCategory=null;
-	
-	public  Integer parseInt(String parent) {
-	 return new Integer(parent);
-	}
-	
-	public Integer parseInt2(String chuCategory) {
-		return new Integer(chuCategory);
+	/**
+	 * 小カテゴリID
+	 */
+	private String syoCategory;
+
+	public Integer parseInt(String parent) {
+		return new Integer(parent);
 	}
 
 	public String getId() {
@@ -52,16 +70,20 @@ public class SearchForm {
 		this.chuCategory = chuCategory;
 	}
 
-	@Override
-	public String toString() {
-		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory + "]";
+	public String getSyoCategory() {
+		return syoCategory;
 	}
 
-	
+	public void setSyoCategory(String syoCategory) {
+		this.syoCategory = syoCategory;
+	}
 
-	
+	@Override
+	public String toString() {
+		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
+				+ ", syoCategory=" + syoCategory + "]";
+	}
 
-	
 	
 
 }

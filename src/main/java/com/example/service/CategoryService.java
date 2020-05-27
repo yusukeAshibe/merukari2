@@ -36,6 +36,11 @@ public class CategoryService {
 		return categoryList;
 	}
 
+	/**
+	 * 小カテゴリ
+	 * @param parent
+	 * @return
+	 */
 	public List<Category> childCategoryList(Integer parent) {
 		List<Category> categoryList = categoryRepository.childCategoryList(parent);
 		return categoryList;

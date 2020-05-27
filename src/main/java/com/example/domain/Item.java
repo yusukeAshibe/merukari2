@@ -20,7 +20,7 @@ public class Item {
 	 */
 	private Integer Condition;
 	/**
-	 * カテゴリID
+	 * 小カテゴリID
 	 */
 	private Integer category;
 	/**
@@ -39,6 +39,57 @@ public class Item {
 	 * アイテムの削除
 	 */
 	private String description;
+	
+	
+	/**
+	 * 大カテゴリのid
+	 */
+	private Integer daiCategoryId;
+	/**
+	 * 中カテゴリのid
+	 */
+	private Integer chuCategoryId;
+	
+	/**
+	 * 大カテゴリ名
+	 */
+	private String daiName;
+	
+	/**
+	 * 中カテゴリ名
+	 */
+	private String chuName;
+	
+	/**
+	 * 小カテゴリ名
+	 */
+	private String syoName;
+   
+    
+
+	public String getDaiName() {
+		return daiName;
+	}
+
+	public void setDaiName(String daiName) {
+		this.daiName = daiName;
+	}
+
+	public String getChuName() {
+		return chuName;
+	}
+
+	public void setChuName(String chuName) {
+		this.chuName = chuName;
+	}
+
+	public String getSyoName() {
+		return syoName;
+	}
+
+	public void setSyoName(String syoName) {
+		this.syoName = syoName;
+	}
 
 	/**
 	 * アイテムのカテゴリ名
@@ -117,12 +168,35 @@ public class Item {
 		this.nameAll = nameAll;
 	}
 
+	public Integer getDaiCategoryId() {
+		return daiCategoryId;
+	}
+
+	public void setDaiCategoryId(Integer daiCategoryId) {
+		this.daiCategoryId = daiCategoryId;
+	}
+
+	public Integer getChuCategoryId() {
+		return chuCategoryId;
+	}
+
+	public void setChuCategoryId(Integer chuCategoryId) {
+		this.chuCategoryId = chuCategoryId;
+	}
+
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", Condition=" + Condition + ", category=" + category + ", brand="
-				+ brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description + ", nameAll="
-				+ nameAll + "]";
+				+ brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description
+				+ ", daiCategoryId=" + daiCategoryId + ", chuCategoryId=" + chuCategoryId + ", daiName=" + daiName
+				+ ", chuName=" + chuName + ", syoName=" + syoName + ", nameAll=" + nameAll + "]";
 	}
+
+	
+
+	
+
+	
 	
 	
 }

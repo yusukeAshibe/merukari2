@@ -51,14 +51,16 @@ public class CategoryRepository {
 		String sql ="select * from category where parent=:parent and name_all is null";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("parent", parent);
 	    List<Category> categoryList = template.query(sql, param, ITEM_ROW_MAPPER);
-	//	List<Category> categoryList = template.query(sql, ITEM_ROW_MAPPER);
+	
 		return categoryList;
 	}
 	
-//	public List<Category> load (Integer id){
-//		String sql="select * from category where id=:id";
-//	}
-//	
+
+	/**
+	 * 小カテゴリの抽出.
+	 * @param parent
+	 * @return
+	 */
 	public List<Category> childCategoryList(Integer parent){
 		String sql ="select * from category where parent=:parent and name_all is not null";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("parent", parent);
