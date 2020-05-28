@@ -55,8 +55,6 @@ public class ItemController {
 	 */
 	@RequestMapping("/")
 	public String showItem(Model model, SearchForm form, @AuthenticationPrincipal LoginUser loginUser, Integer page) {// parentは親カテゴリのID
-		
-
 //		//ページ関連
 //		Integer page;
 //		if (form.getPage().equals("")) {
@@ -75,7 +73,7 @@ public class ItemController {
 		// 初期の画面遷移
 		if (form.getId() == null && form.getChuCategory() == null && form.getSyoCategory() == null
 				&& form.getName() == null) {
-			
+
 			List<Category> parentCategoryList = categoryService.parentCategoryList();
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			List<Item> itemList = new ArrayList<>();
@@ -85,6 +83,7 @@ public class ItemController {
 
 		}
 
+		
 		// 大カテゴリが選択されていない場合
 		if (form.getParent() != null && form.getParent().equals("")) {
 			List<Item> itemList = new ArrayList<>();
@@ -99,14 +98,24 @@ public class ItemController {
 			return "list.html";
 
 		}
+		
+		
 
 		List<Item> itemList = new ArrayList<>();
 		List<Category> parentCategoryList = categoryService.parentCategoryList();
 		List<Category> categoryList = new ArrayList<>();
 		List<Category> childCategoryList = new ArrayList<>();
 		itemList = itemService.showItem(page);
-
 		parentCategoryList = categoryService.parentCategoryList();
+		
+		
+		
+		// 名前検索
+		if (form.getName() != null && !form.getName().equals("")) {
+			
+			itemList = itemService.searchItem(form.getName(), page);
+		}
+
 
 		// 中カテゴリの値の変更
 		if (form.getParent() != null && (form.getChuCategory().equals(""))) {
@@ -115,7 +124,7 @@ public class ItemController {
 			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			model.addAttribute("categoryList", categoryList);
-			
+
 		}
 		// 小カテゴリの値の変更
 		if (form.getParent() != null && !(form.getChuCategory().equals(""))) {
@@ -143,6 +152,7 @@ public class ItemController {
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page);
 		}
 
+		
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("childCategoryList", childCategoryList);

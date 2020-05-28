@@ -340,7 +340,7 @@ String sql= "SELECT  \r\n" +
 				"WHERE name LIKE :name LIMIT 20 offset :offset ";
 				
 		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%").addValue("offset",offset);
-		;
+		System.out.println(name);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
