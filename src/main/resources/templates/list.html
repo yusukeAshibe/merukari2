@@ -22,9 +22,8 @@
 <script type="text/javascript">
 function aaaa(){
 	console.log("ffff");
-	const syocategory = document.form1.syocategory;
-	const num = syocategory.selectedIndex;
-	const str = syocategory.options[num].value;
+	$('#chuCategory').val("");
+   	$('#syoCategory').val("");
 	form1.submit();
 }
 
@@ -53,24 +52,6 @@ function submit3(value) {
 }
 
 
-
-$('#parent').on('change', function() {
-	    if( $('#chuCategory')!=null||$('#chuCategory').equals("")){
-	    	 $('#chuCategory').value=="";
-	    	 console.log("aaaaaa")
-	    }
-	    if( $('#syocategory')!=null){
-	    	 $('#syoCategory').value=="";	
-	    }
-	    form1.submit();
-	 });
-	 
-$('#chuCategory').on('change', function() {
-    if( $('#syocategory')!=null){
-    	 $('#syoCategory').value=="";	
-    }
-    form1.submit();
- });
  
  </script>
 </head>
@@ -83,14 +64,14 @@ $('#chuCategory').on('change', function() {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="./list.html">Rakus Items</a>
+      <a class="navbar-brand"  href="./list.html">Rakus Items</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <div>
         <ul class="nav navbar-nav navbar-right">
-          <li>
-          <span sec:authorize="hasRole('ROLE_USER')"><a id="logout" href="/logout">Logout <i class="fa fa-power-off"></i></a></span>
-          </li>
+         
+         <li><a id="logout"  sec:authorize="hasRole('ROLE_USER')" href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
+          
         </ul>
         <p class="navbar-text navbar-right">
           <span id="loginName"  th:text="${email}">user: userName</span>
@@ -102,14 +83,13 @@ $('#chuCategory').on('change', function() {
   <div id="main" class="container-fluid">
     <!-- addItem link -->
     <div id="addItemButton">
-      <a class="btn btn-default" href="./add.html"><i class="fa fa-plus-square-o"></i> Add New Item</a>
+      <a class="btn btn-default" href="./add.html" th:href="@{/addItem/showAddItem}"><i class="fa fa-plus-square-o"></i> Add New Item</a>
     </div>
 
     <!-- 検索フォーム -->
     <div id="forms">
       <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" th:object="${searchForm}">
-        <input name="page" type="text">
-		<button type="submit">ページへ</button>
+       
         <div class="form-group">
           <input type="input" class="form-control" id="name" placeholder="item name"/>
         </div>
@@ -130,7 +110,7 @@ $('#chuCategory').on('change', function() {
        
           </select>
           <!--/form-->
-          <select class="form-control" id="syocategory" name="syoCategory" onchange="submit3(this.value)"> 
+          <select class="form-control" id="syoCategory" name="syoCategory" onchange="submit3(this.value)"> 
             <option value="">- grandChild -</option>
             <option th:each="childCategory : ${childCategoryList}" th:value="${childCategory.id}" th:text="${childCategory.name}" th:field="*{syoCategory}">grandChild1</option>
             
@@ -142,10 +122,14 @@ $('#chuCategory').on('change', function() {
         </div>
         <div class="form-group"></div>
         <button type="submit" class="btn btn-default"><i class="fa fa-angle-double-right"></i> search</button>
+        <div align="right">
+     <input name="page" type="text" align="right" th:field="*{page}">
+		 <button type="submit" align="right">Go to page</button>
       </form>
     </div>
 
-    <!-- pagination -->
+
+    <!-- pagination 
     <div class="pages">
       <nav class="page-nav">
         <ul class="pager">
@@ -153,8 +137,9 @@ $('#chuCategory').on('change', function() {
           <li class="next"><a href="#">next &rarr;</a></li>
         </ul>
       </nav>
-    </div>
-
+    </div>-->
+    
+	</div>
     <!-- table -->
  <!--   <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" > -->
     <div class="table-responsive">
@@ -198,22 +183,22 @@ $('#chuCategory').on('change', function() {
 　 				    }
 			</script-->
 
-    <!-- pagination -->
-    <div class="pages">
+   <!-- <a pagination ></a>
+     <div class="pages">
       <nav class="page-nav">
         <ul class="pager">
           <li class="previous"><a href="#">&larr; prev</a></li>
           <li class="next"><a href="#">next &rarr;</a></li>
         </ul>
       </nav>
-      <!-- ページ番号を指定して表示するフォーム -->
+     
       <div id="select-page">
-        <form class="form-inline">
+       <!--    <form class="form-inline">
           <div class="form-group">
             <div class="input-group col-xs-6">
               <label></label>
               <input type="text" class="form-control"/>
-              <!-- 総ページ数 -->
+             
               <div class="input-group-addon">/ 20</div>
             </div>
             <div class="input-group col-xs-1">
@@ -223,6 +208,6 @@ $('#chuCategory').on('change', function() {
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
 </body>
 </html>

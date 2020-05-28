@@ -4,6 +4,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,10 +35,11 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/to-login")
-	public String toLogin(Model model, @RequestParam(required = false) String error,LoginForm form) {
+	public String toLogin(Model model, @RequestParam(required = false) String error, @Validated LoginForm form, BindingResult result) {
 		if (error != null) {
 			model.addAttribute("error", "Email or Password is wrong ");
 		}
+	
 		return "login.html";
 	}
 	

@@ -31,6 +31,11 @@ public class SearchForm {
 	 * 小カテゴリID
 	 */
 	private String syoCategory;
+	
+	/**
+	 * ページ数
+	 */
+	private String page;
 
 	public Integer parseInt(String parent) {
 		return new Integer(parent);
@@ -78,10 +83,18 @@ public class SearchForm {
 		this.syoCategory = syoCategory;
 	}
 
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
 	@Override
 	public String toString() {
 		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
-				+ ", syoCategory=" + syoCategory + "]";
+				+ ", syoCategory=" + syoCategory + ", page=" + page + "]";
 	}
 
 	

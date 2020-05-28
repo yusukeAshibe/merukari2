@@ -112,4 +112,12 @@ public class ItemService {
 		List<Item> itemList = itemRepository.selectCategory(dai,offset);
 		return itemList;
 	}
+	
+	/**
+	 * 商品の追加.
+	 * @param item
+	 */
+	public void addItem(Item item) {
+		itemRepository.addItem(item);
+	}
 }

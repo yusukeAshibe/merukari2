@@ -20,7 +20,7 @@
 <body>
   <!-- navbar -->
   <nav class="navbar navbar-inverse">
-    <a class="navbar-brand" href="./list.html">Rakus Items</a>
+    <a class="navbar-brand" th:href="@{/login-user/to-login}" href="./list.html">Rakus Items</a>
   </nav>
 
   <!-- login form -->
@@ -29,6 +29,11 @@
       <div class="panel-heading">Login</div>
       <div class="panel-body">
         <p class="text-danger"  th:if="${error}" th:text="${error}"　style="color:red" >error:failed to login</p>
+            <ul>
+        		<li th:if="${error}" th:each="error : ${#fields.detailedErrors()}">
+            	<span th:text="${error.message}">Error message</span>
+        		</li>
+    		</ul>
             
         <form action="#" method="POST" th:action="@{/login}" th:object="${loginForm}">
           <div class="form-group"> 

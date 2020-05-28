@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -343,6 +344,16 @@ String sql= "SELECT  \r\n" +
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
+	}
+	
+	/**
+	 * 商品の追加を行う.
+	 * @param item
+	 */
+	public void addItem(Item item) {
+		String sql="insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+		template.update(sql, param);
 	}
 
 }
