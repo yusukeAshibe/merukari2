@@ -39,6 +39,9 @@ public class LoginController {
 		if (error != null) {
 			model.addAttribute("error", "Email or Password is wrong ");
 		}
+		if(result.hasErrors()) {
+			return "login.html";
+		}
 	
 		return "login.html";
 	}

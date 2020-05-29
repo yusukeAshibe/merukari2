@@ -93,7 +93,7 @@ String sql= "SELECT  \r\n" +
 		"left join category c1 on c1.id = i.category\r\n" + 
 		"left join category c2 on c1.parent = c2.id \r\n" + 
 		"left join category c3 on c2.parent = c3.id\r\n" + 
-		"LIMIT 20 offset :offset";
+		"order by i.id LIMIT 20 offset :offset";
 		
 //
 //		String sql = "SELECT  i.id i_id, i.name i_name , i.condition i_condition, i.category i_category, i.brand i_brand,i.price i_price,i.shipping i_shipping,i.description i_description,c1.id c1_id,c2.id c2_id ,c2.parent c2_parent ,c1.name_all c1_name_all,c1.name c1_name,c2.name c2_name ,c3.id c3_id ,\r\n" + 
@@ -134,7 +134,7 @@ String sql= "SELECT  \r\n" +
 				"left join category c1 on c1.id = i.category\r\n" + 
 				"left join category c2 on c1.parent = c2.id \r\n" + 
 				"left join category c3 on c2.parent = c3.id\r\n" + 
-				"where i.id=:id";
+				"where i.id=:id ";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER2);
 		return item;

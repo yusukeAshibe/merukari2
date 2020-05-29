@@ -8,36 +8,35 @@ public class AddItemForm {
 	/**
 	 *商品名 
 	 */
-	@NotBlank(message="error:may not be empty")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$" ,message="Please type using half-width characters.")
+	@NotBlank(message="入力必須です")
+	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$" ,message="半角英数字で入力してください")
 	
 	private String name;
 	
 	/**
 	 * 状態
 	 */
-	@NotBlank(message="error:may not be empty")
-	@Pattern(regexp="^[0-9]$", message="")
+	@NotBlank(message="入力必須です")
+	@Pattern(regexp="^[0-9]$", message="半角数字で入力してください")
 	private String condition;
 	
 	/**
 	 * 小カテゴリID
 	 */
-	@NotBlank(message="error:may not be empty")
+	@NotBlank(message="小カテゴリまで選択必須です")
 	private String category;
 	
 	/**
 	 * ブランド
 	 */
-	@NotBlank(message="error:may not be empty")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$", message="Please type using half-width characters.")
+	@Pattern(regexp="^[ -~｡-ﾟ]{0,100}$", message="半角英数字で入力してください")
 	private String brand;
 	
 	/**
 	 * 価格
 	 */
-	@NotBlank(message="error:may not be empty")
-	@Pattern(regexp="^[0-9]{1,10}$" ,message="please type using half-width digit")
+	@NotBlank(message="入力必須です")
+	@Pattern(regexp="^[0-9]{1,10}$" ,message="半角数字で入力してください")
 	private String price;
 	
 	/**
@@ -48,20 +47,18 @@ public class AddItemForm {
 	/**
 	 * 商品説明
 	 */
-	@NotBlank(message="error:may not be empty")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100000}$", message="Please type using half-width characters.")
+	@NotBlank(message="入力必須です")
+	@Pattern(regexp="^[ -~｡-ﾟ]{1,100000}$", message="半角英数字で入力してください")
 	private String description;
 	
 	/**
 	 * 大カテゴリID
 	 */
-	@NotBlank(message="error:may not be empty")
 	private String parent;
 
 	/**
 	 * 中カテゴリID
 	 */
-	@NotBlank(message="error:may not be empty")
 	private String chuCategory;
 	
 	

@@ -14,14 +14,15 @@ public class RegisterUserForm {
 	/**
 	 * Eメール
 	 */
-	@Email(message = "Email format is wrong" )
-	@NotBlank(message = "Enter Email !!")
+	@Email(message = "Emailの形で入力してください「" )
+	@NotBlank(message = "メールアドレスを入力してください")
 	private String email;
 	/**
 	 * パスワード
 	 */
-	@NotBlank(message="Enter Password !!")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$",message="Please type using half-width characters.")
+	@NotBlank(message="パスワードを入力してください")
+	//@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$",message="半角英数字で入力してください")
+	@Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message="パスワードの形が間違っています。8文字以上16文字以内の半角英数字で入力してください")
 	private String password;
 	
 	public String getEmail() {

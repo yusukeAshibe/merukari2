@@ -73,11 +73,12 @@
     <form name="form1" action="#" method="POST" th:action="@{/addItem/add}"class="form-horizontal" id="form1"　th:object="${addItemForm}">
       <!-- name -->
       <div class="form-group">
-        <label for="inputName" class="col-sm-2 control-label">name</label>
+        <label for="inputName" class="col-sm-2 control-label">name
+        </label>
         <div class="col-sm-8">
          <label for="name" th:errors="*{name}" style="color:red"></label>  
           <input type="text" class="form-control" id="name" name="name" th:field="*{name}">
-          <span class="text-danger"></span>
+          <span class="text-danger">※半角英数字　入力必須</span>
         </div>
       </div>
       <!-- price -->
@@ -86,19 +87,22 @@
         <div class="col-sm-8">
           <label for="price" th:errors="*{price}" style="color:red"></label>  
           <input type="text" class="form-control" id="price" name="price" th:field="*{price}">
-          <span class="text-danger"></span>
+          <span class="text-danger">※半角数字　入力必須</span>
         </div>
       </div>
+       
       <!-- category -->
       <div class="form-group">
+      
         <label for="category" class="col-sm-2 control-label">category</label>
         <div class="col-sm-8">
          <label for="parent" th:errors="*{parent}" style="color:red"></label>  
+      <label for="category" th:errors="*{category}" style="color:red"></label> 
           <select class="form-control" id="parent" name="parent" onchange="categoryChange()" >
             <option  value="99">-- parentCategory --</option>
-            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}"  th:name="${parentCategory.id}" th:field="*{parent}">parentCategory1</option>
-            			
+            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}"  th:name="${parentCategory.id}" th:field="*{parent}">parentCategory1</option>	
           </select>
+            <span class="text-danger">※選択必須項目</span>
         </div>
       </div>
       <div class="form-group">
@@ -108,25 +112,27 @@
           <select class="form-control" id="chuCategory" name="chuCategory" onchange="categoryChange2()" >
             <option value="" >-- childCategory --</option>
             <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:name="${category.id}" th:field="*{chuCategory}">childCategory1</option>
-           
           </select>
+           <span class="text-danger">	※選択必須項目</span>
         </div>
       </div>
       <div class="form-group">
         <label for="category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-         <label for="category" th:errors="*{category}" style="color:red"></label>  
+         
           <select class="form-control" id="category" name="category" onchange="categoryChange2()">
             <option value="">-- grandChild --</option>
             <option th:each="childCategory : ${childCategoryList}" th:value="${childCategory.id}" th:text="${childCategory.name}" th:field="*{category}" >grandChild1</option>
-        
           </select>
+     		
         </div>
+        	
       </div>
       <div class="form-group">
         <label for="category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-          <span class="text-danger"</span>
+       
+          <span class="text-danger">※選択必須項目</span>
         </div>
       </div>
       <!-- brand -->
@@ -135,7 +141,7 @@
         <div class="col-sm-8">
          <label for="brand" th:errors="*{brand}" style="color:red"></label>  
           <input type="text" id="brand" class="form-control" name="brand" th:field="*{brand}">
-          <span class="text-danger"></span>
+          <span class="text-danger">※半角英数字　入力任意</span>
         </div>
       </div>
       <!-- condition -->
@@ -157,7 +163,7 @@
       <div class="form-group">
         <label for="category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-          <span class="text-danger"></span>
+          <span class="text-danger">※選択必須項目</span>
         </div>
       </div>
       <!-- description -->
@@ -166,7 +172,7 @@
         <div class="col-sm-8">
          <label for="description" th:errors="*{description}" style="color:red"></label>  
           <textarea name="description" id="description" class="form-control" rows="5" th:field="*{description}"></textarea>
-          <span class="text-danger"></span>
+          <span class="text-danger">※選択必須項目</span>
         </div>
       </div>
       <!-- submit button -->

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -54,26 +56,42 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/")
-	public String showItem(Model model, SearchForm form, @AuthenticationPrincipal LoginUser loginUser, Integer page) {// parentは親カテゴリのID
-//		//ページ関連
-//		Integer page;
-//		if (form.getPage().equals("")) {
-//			page =1 ;
-//		} else if(form.getPage()!=null) {
-//			page = Integer.parseInt(form.getPage());
-//		}else {
+	public String showItem(Model model,@Validated SearchForm form,BindingResult result ,@AuthenticationPrincipal LoginUser loginUser,Integer page) {// parentは親カテゴリのID
+		
+//		if(result.hasErrors()) {
+//			return showItem(model, form, result, loginUser);
+//		}StackOverflowError
+//		
+	
+		try {
+			page=Integer.parseInt(form.getPage());
+		}catch(NumberFormatException e){
+			page=1;
+		}
+		//反応しない（Integer pageが引数にあるとき使用）なおInteger pageを利用すればページに何も入っていなくとも１が帰る
+//		page　→form.parseIntPage() 変更
+//		
+//		//ページの初期表示
+//		if(form.getPage()==null) {
 //			page=1;
 //		}
-		// メールアドレスの表示
+//		String pageCheck=form.getPage();
+//		
+//		if(!pageCheck.matches("^[0-9]$")) {
+//			result.rejectValue("page", "", "半角数字を入力してください");
+//		}
+		
+	
+				// メールアドレスの表示
 		if (loginUser != null) {
 			String userEmail = loginUser.getUser().getEmail();
 			model.addAttribute("email", userEmail);
 		}
 
 		// 初期の画面遷移
-		if (form.getId() == null && form.getChuCategory() == null && form.getSyoCategory() == null
+		if (form.getId() == null &&form.getParent()==null && form.getChuCategory() == null && form.getSyoCategory() == null
 				&& form.getName() == null) {
-
+			System.out.println("初期表示");
 			List<Category> parentCategoryList = categoryService.parentCategoryList();
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			List<Item> itemList = new ArrayList<>();
@@ -82,7 +100,7 @@ public class ItemController {
 			return "list.html";
 
 		}
-
+		
 		
 		// 大カテゴリが選択されていない場合
 		if (form.getParent() != null && form.getParent().equals("")) {
@@ -95,6 +113,7 @@ public class ItemController {
 			model.addAttribute("categoryList", categoryList);
 			model.addAttribute("childCategoryList", childCategoryList);
 			model.addAttribute("itemList", itemList);
+			System.out.println(form);
 			return "list.html";
 
 		}
@@ -105,29 +124,25 @@ public class ItemController {
 		List<Category> parentCategoryList = categoryService.parentCategoryList();
 		List<Category> categoryList = new ArrayList<>();
 		List<Category> childCategoryList = new ArrayList<>();
-		itemList = itemService.showItem(page);
-		parentCategoryList = categoryService.parentCategoryList();
+//		itemList = itemService.showItem(form.parseIntpage());
+//		parentCategoryList = categoryService.parentCategoryList();
 		
 		
 		
-		// 名前検索
-		if (form.getName() != null && !form.getName().equals("")) {
-			
-			itemList = itemService.searchItem(form.getName(), page);
-		}
+		
 
 
-		// 中カテゴリの値の変更
-		if (form.getParent() != null && (form.getChuCategory().equals(""))) {
-			System.out.println(form);
+		// 中カテゴリの値の取得
+		if (form.getParent() != null && (("").equals(form.getChuCategory()))) {
 			parentCategoryList = categoryService.parentCategoryList();
 			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+			itemList=itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page);
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			model.addAttribute("categoryList", categoryList);
 
 		}
-		// 小カテゴリの値の変更
-		if (form.getParent() != null && !(form.getChuCategory().equals(""))) {
+		// 小カテゴリの値の取得
+		if (form.getParent() != null && !(("")).equals(form.getChuCategory())) {
 			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
 			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
 			model.addAttribute("categoryList", categoryList);
@@ -140,7 +155,7 @@ public class ItemController {
 				&& form.getSyoCategory() != null && !form.getSyoCategory().equals(""))) {
 
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
-					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()), page);
+					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()),page);
 
 			// 大中カテゴリの選択をした場合
 		} else if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals("")))) {
@@ -149,7 +164,7 @@ public class ItemController {
 
 			// 大カテゴリまでの検索時
 		} else if ((form.getParent() != null && !form.getParent().equals(""))) {
-			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page);
+			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), form.parseIntPage());
 		}
 
 		

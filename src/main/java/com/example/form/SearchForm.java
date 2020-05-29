@@ -1,5 +1,7 @@
 package com.example.form;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * 入力された検索条件を受け取るフォーム,
  * @author ashibe
@@ -35,12 +37,16 @@ public class SearchForm {
 	/**
 	 * ページ数
 	 */
-	private String page;
+	//@Pattern(regexp="^[0-9]$" ,message="エラー")
+	private String page="1";
 
 	public Integer parseInt(String parent) {
 		return new Integer(parent);
 	}
-
+	
+	public Integer parseIntPage() {
+		return new Integer(this.page);
+	}
 	public String getId() {
 		return id;
 	}
@@ -96,6 +102,10 @@ public class SearchForm {
 		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
 				+ ", syoCategory=" + syoCategory + ", page=" + page + "]";
 	}
+
+
+
+	
 
 	
 

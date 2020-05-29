@@ -14,12 +14,12 @@ public class LoginForm {
 	 *Eメール 
 	 */
 	/** メールアドレス */
-	@Email(message = "Email format is wrong" )
-	@NotBlank(message = "Enter Email !!")
+	//@Email(message = "Email format is wrong" )
+	//@NotBlank(message = "Enter Email !!")
 	private String email;
 
 	/** パスワード */
-	@NotBlank(message="Enter Password !!")
+	//@NotBlank(message="Enter Password !!")
 	private String password;
 
 	public String getEmail() {
