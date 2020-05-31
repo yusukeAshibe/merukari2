@@ -38,15 +38,29 @@ public class SearchForm {
 	 * ページ数
 	 */
 	//@Pattern(regexp="^[0-9]$" ,message="エラー")
-	private String page="1";
+	private String page;
+	
+	/**
+	 * ブランド名.
+	 */
+	private String brand;
+	
+
+	public String getBrand() {
+		return brand;
+	}
+
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
 
 	public Integer parseInt(String parent) {
 		return new Integer(parent);
 	}
 	
-	public Integer parseIntPage() {
-		return new Integer(this.page);
-	}
+	
 	public String getId() {
 		return id;
 	}
@@ -97,12 +111,14 @@ public class SearchForm {
 		this.page = page;
 	}
 
+
 	@Override
 	public String toString() {
 		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
-				+ ", syoCategory=" + syoCategory + ", page=" + page + "]";
+				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + "]";
 	}
 
+	
 
 
 	

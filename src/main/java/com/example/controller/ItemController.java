@@ -22,6 +22,7 @@ import com.example.form.SearchForm;
 import com.example.service.CategoryService;
 import com.example.service.ItemService;
 import com.example.service.UserService;
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer.FromDecimalArguments;
 
 /**
  * アイテム関連の操作をするコントローラ.
@@ -56,54 +57,41 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/")
-	public String showItem(Model model,@Validated SearchForm form,BindingResult result ,@AuthenticationPrincipal LoginUser loginUser,Integer page) {// parentは親カテゴリのID
+	public String showItem(Model model, @Validated SearchForm form, BindingResult result,
+			@AuthenticationPrincipal LoginUser loginUser) {// parentは親カテゴリのID
+
 		
-//		if(result.hasErrors()) {
-//			return showItem(model, form, result, loginUser);
-//		}StackOverflowError
-//		
-	
+//ページ要素に文字列が入ってきた場合のエラー回避	
+		Integer page;
 		try {
-			page=Integer.parseInt(form.getPage());
-		}catch(NumberFormatException e){
-			page=1;
-		}
-		//反応しない（Integer pageが引数にあるとき使用）なおInteger pageを利用すればページに何も入っていなくとも１が帰る
-//		page　→form.parseIntPage() 変更
-//		
-//		//ページの初期表示
-//		if(form.getPage()==null) {
-//			page=1;
-//		}
-//		String pageCheck=form.getPage();
-//		
-//		if(!pageCheck.matches("^[0-9]$")) {
-//			result.rejectValue("page", "", "半角数字を入力してください");
-//		}
-		
-	
-				// メールアドレスの表示
-		if (loginUser != null) {
-			String userEmail = loginUser.getUser().getEmail();
-			model.addAttribute("email", userEmail);
+			page = Integer.parseInt(form.getPage());
+		} catch (NumberFormatException e) {
+			form.setPage("1");
+			page = 1;
 		}
 
+		// ユーザーのメルアドレスの表示
+		String userEmail = loginUser.getUser().getEmail();
+		model.addAttribute("email", userEmail);
+
 		// 初期の画面遷移
-		if (form.getId() == null &&form.getParent()==null && form.getChuCategory() == null && form.getSyoCategory() == null
-				&& form.getName() == null) {
-			System.out.println("初期表示");
+		if (form.getId() == null && form.getParent() == null && form.getChuCategory() == null
+				&& form.getSyoCategory() == null && form.getName() == null && form.getName() == null
+				&& form.getPage().equals("1")) {
 			List<Category> parentCategoryList = categoryService.parentCategoryList();
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			List<Item> itemList = new ArrayList<>();
+			form.setPage("1");
 			itemList = itemService.showItem(page);
 			model.addAttribute("itemList", itemList);
+			//System.out.println("初期表示");
+
 			return "list.html";
 
 		}
-		
-		
+
 		// 大カテゴリが選択されていない場合
-		if (form.getParent() != null && form.getParent().equals("")) {
+		if (form.getParent() != null && form.getParent().equals("") && form.getName() == null) {
 			List<Item> itemList = new ArrayList<>();
 			List<Category> parentCategoryList = categoryService.parentCategoryList();
 			List<Category> categoryList = new ArrayList<>();
@@ -113,65 +101,109 @@ public class ItemController {
 			model.addAttribute("categoryList", categoryList);
 			model.addAttribute("childCategoryList", childCategoryList);
 			model.addAttribute("itemList", itemList);
-			System.out.println(form);
+			//System.out.println(" 何も選択されていない場合");
 			return "list.html";
 
 		}
-		
-		
 
 		List<Item> itemList = new ArrayList<>();
 		List<Category> parentCategoryList = categoryService.parentCategoryList();
 		List<Category> categoryList = new ArrayList<>();
 		List<Category> childCategoryList = new ArrayList<>();
+
 //		itemList = itemService.showItem(form.parseIntpage());
 //		parentCategoryList = categoryService.parentCategoryList();
-		
-		
-		
-		
 
-
-		// 中カテゴリの値の取得
-		if (form.getParent() != null && (("").equals(form.getChuCategory()))) {
+// カテゴリの　プルダウン設定
+		// 大カテゴリの選択がなくなった場合
+		if (form.getName() != null && form.getParent().equals("")) {
 			parentCategoryList = categoryService.parentCategoryList();
-			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
-			itemList=itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page);
+			model.addAttribute("parentCategoryList", parentCategoryList);
+		}
+
+		// 中カテゴリの値の取得 大カテゴリのみが選択された場合(名前選択あり）
+		if (!("").equals(form.getName()) && form.getParent() != null && (("").equals(form.getChuCategory()))) {
+			parentCategoryList = categoryService.parentCategoryList();
+			if (!form.getParent().equals("")) {
+				categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+				itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
+			}
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			model.addAttribute("categoryList", categoryList);
+			//System.out.println("大カテゴリのみが選択された場合");
 
-		}
-		// 小カテゴリの値の取得
-		if (form.getParent() != null && !(("")).equals(form.getChuCategory())) {
+			// 小カテゴリの値の取得 大中カテゴリが選ばれた場合（名前選択あり）
+		} else if (!("").equals(form.getName()) && form.getParent() != null && !(("")).equals(form.getChuCategory())) {
 			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
 			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
 			model.addAttribute("categoryList", categoryList);
 			model.addAttribute("childCategoryList", childCategoryList);
+			//System.out.println("大中カテゴリが選ばれた場合");
+
+			// 中カテゴリの値の取得 大カテゴリのみが選択された場合(名前選択なし）
+		} else if (form.getParent() != null && (("").equals(form.getChuCategory()))) {
+			parentCategoryList = categoryService.parentCategoryList();
+			if (!form.getParent().equals("")) {
+				categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+			}
+
+			if (form.getParent().equals("")) {
+				itemList = itemService.showItem(page);
+			} else {
+				itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
+			}
+			model.addAttribute("parentCategoryList", parentCategoryList);
+			model.addAttribute("categoryList", categoryList);
+			//System.out.println("大カテゴリのみが選択された場合");
+
+			// 小カテゴリの値の取得 大中カテゴリが選ばれた場合（名前選択なし）
+		} else if (form.getParent() != null && !(("")).equals(form.getChuCategory())) {
+			categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
+			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
+			model.addAttribute("categoryList", categoryList);
+			model.addAttribute("childCategoryList", childCategoryList);
+		//	System.out.println("大中カテゴリが選ばれた場合");
 
 		}
+
+		// 商品選択
 
 		// 大中小すべてのカテゴリが選択
 		if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals(""))
 				&& form.getSyoCategory() != null && !form.getSyoCategory().equals(""))) {
 
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
-					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()),page);
+					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()), page, form);
+			
+			//System.out.println("小カテゴリ検索（商品表示）");
 
 			// 大中カテゴリの選択をした場合
 		} else if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals("")))) {
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
-					Integer.parseInt(form.getChuCategory()), page);
-
+					Integer.parseInt(form.getChuCategory()), page, form);
+		
+			//System.out.println("中カテゴリが選ばれた場合（商品表示）");
+//			
 			// 大カテゴリまでの検索時
 		} else if ((form.getParent() != null && !form.getParent().equals(""))) {
-			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), form.parseIntPage());
+			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
+			//System.out.println("大カテゴリが選ばれた場合（商品表示）");
+		
+		} else if (form.getName() != null && !("").equals(form.getName())) {
+			itemList=itemService.searchItem(page, form);
+
+		}
+		if(("").equals(form.getName())&&("").equals(form.getParent())&&("").equals(form.getChuCategory())&&("").equals(form.getSyoCategory())&&("").equals(form.getName())) {
+			itemList=itemService.searchItem(page, form);
 		}
 
-		
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("childCategoryList", childCategoryList);
 		model.addAttribute("itemList", itemList);
+		
+
+//		
 		return "list.html";
 
 	}

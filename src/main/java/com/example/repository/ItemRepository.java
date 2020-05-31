@@ -27,11 +27,11 @@ public class ItemRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
-	
 	@ModelAttribute
 	public SearchForm setUpsearchForm() {
 		return new SearchForm();
 	}
+
 	private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
 		Item item = new Item();
 		item.setId(rs.getInt("id"));
@@ -61,7 +61,7 @@ public class ItemRepository {
 		item.setDaiName(rs.getString("c3_name"));
 		item.setChuName(rs.getString("c2_name"));
 		item.setSyoName(rs.getString("c1_name"));
-		
+
 		return item;
 	};
 
@@ -71,37 +71,23 @@ public class ItemRepository {
 	 * @return
 	 */
 	public List<Item> findAll(Integer offset) {
-		
-String sql= "SELECT  \r\n" + 
-		"i.id i_id,\r\n" + 
-		"i.name i_name ,\r\n" + 
-		"i.condition i_condition, \r\n" + 
-		"i.category i_category, \r\n" + 
-		"i.brand i_brand,\r\n" + 
-		"i.price i_price,\r\n" + 
-		"i.shipping i_shipping,\r\n" + 
-		"i.description i_description,\r\n" + 
-		"c1.id c1_id ,\r\n" + 
-		"c2.id c2_id,\r\n" + 
-		"c2.parent c2_parent ,\r\n" + 
-		"c1.name_all c1_name_all ,\r\n" + 
-		"c1.name c1_name,\r\n" + 
-		"c2.name c2_name,\r\n" + 
-		"c3.id c3_id ,\r\n" + 
-		"c3.name c3_name\r\n" + 
-		"from items i\r\n" + 
-		"left join category c1 on c1.id = i.category\r\n" + 
-		"left join category c2 on c1.parent = c2.id \r\n" + 
-		"left join category c3 on c2.parent = c3.id\r\n" + 
-		"order by i.id LIMIT 20 offset :offset";
-		
+
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "order by i.id LIMIT 20 offset :offset";
+
 //
 //		String sql = "SELECT  i.id i_id, i.name i_name , i.condition i_condition, i.category i_category, i.brand i_brand,i.price i_price,i.shipping i_shipping,i.description i_description,c1.id c1_id,c2.id c2_id ,c2.parent c2_parent ,c1.name_all c1_name_all,c1.name c1_name,c2.name c2_name ,c3.id c3_id ,\r\n" + 
 //				"c3.name c3_name from items i left join category c1 on c1.id = i.category  left join category c2 on c1.id = c2.parent left join category c3 on c2.parent = c3.id  LIMIT 20 offset :offset ";
 		MapSqlParameterSource param = new MapSqlParameterSource().addValue("offset", offset);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
-		
+
 	}
 
 	/**
@@ -113,28 +99,14 @@ String sql= "SELECT  \r\n" +
 	 */
 	public Item load(Integer id) {
 
-		String sql= "SELECT  \r\n" + 
-				"i.id i_id,\r\n" + 
-				"i.name i_name ,\r\n" + 
-				"i.condition i_condition, \r\n" + 
-				"i.category i_category, \r\n" + 
-				"i.brand i_brand,\r\n" + 
-				"i.price i_price,\r\n" + 
-				"i.shipping i_shipping,\r\n" + 
-				"i.description i_description,\r\n" + 
-				"c1.id c1_id ,\r\n" + 
-				"c2.id c2_id,\r\n" + 
-				"c2.parent c2_parent ,\r\n" + 
-				"c1.name_all c1_name_all ,\r\n" + 
-				"c1.name c1_name,\r\n" + 
-				"c2.name c2_name,\r\n" + 
-				"c3.id c3_id ,\r\n" + 
-				"c3.name c3_name\r\n" + 
-				"from items i\r\n" + 
-				"left join category c1 on c1.id = i.category\r\n" + 
-				"left join category c2 on c1.parent = c2.id \r\n" + 
-				"left join category c3 on c2.parent = c3.id\r\n" + 
-				"where i.id=:id ";
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "where i.id=:id ";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER2);
 		return item;
@@ -143,14 +115,15 @@ String sql= "SELECT  \r\n" +
 
 	/**
 	 * 大中小カテゴリ検索
+	 * 
 	 * @param dai
 	 * @param chu
 	 * @param sho
 	 * @param offset
 	 * @return
 	 */
-	public List<Item> selectCategory(Integer dai, Integer chu,Integer sho,Integer offset) {
-	
+	public List<Item> selectCategory(Integer dai, Integer chu, Integer sho, Integer offset, SearchForm form) {
+
 //		String sql = "SELECT \r\n" + 
 //				"i.id i_id,\r\n" + 
 //				"i.name i_name , \r\n" + 
@@ -168,190 +141,191 @@ String sql= "SELECT  \r\n" +
 //				"from items i\r\n" + 
 //				"left join category c1 on c1.id = i.category  left join category c2 on c1.parent = c2.id "+
 //				" where 1=1";
-		
-		String sql= "SELECT  \r\n" + 
-				"i.id i_id,\r\n" + 
-				"i.name i_name ,\r\n" + 
-				"i.condition i_condition, \r\n" + 
-				"i.category i_category, \r\n" + 
-				"i.brand i_brand,\r\n" + 
-				"i.price i_price,\r\n" + 
-				"i.shipping i_shipping,\r\n" + 
-				"i.description i_description,\r\n" + 
-				"c1.id c1_id ,\r\n" + 
-				"c2.id c2_id,\r\n" + 
-				"c2.parent c2_parent ,\r\n" + 
-				"c1.name_all c1_name_all ,\r\n" + 
-				"c1.name c1_name,\r\n" + 
-				"c2.name c2_name,\r\n" + 
-				"c3.id c3_id ,\r\n" + 
-				"c3.name c3_name\r\n" + 
-				"from items i\r\n" + 
-				"left join category c1 on c1.id = i.category\r\n" + 
-				"left join category c2 on c1.parent = c2.id \r\n" + 
-				"left join category c3 on c2.parent = c3.id\r\n" + 
-				"where 1=1";
-				
+
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		if (sho != null) {
 			sql += " AND c1.id = :sho";
-			  param.addValue("sho", sho);//小カテゴリ
-		}else if(chu != null) {
+			param.addValue("sho", sho);// 小カテゴリ
+		} else if (chu != null) {
 			sql += " AND  c2.id = :chu";
-			param.addValue("chu", chu);//中カテゴリ
-		}else if (dai!= null) {
+			param.addValue("chu", chu);// 中カテゴリ
+		} else if (dai != null) {
 			sql += " AND c2.parent = :dai";
-			param.addValue("dai", dai);//大カテゴリ
+			param.addValue("dai", dai);// 大カテゴリ
 		}
+
 		
 		
+		if (!StringUtils.isEmpty(form.getName())) {
+			sql += " AND i.name LIKE :name";
+			param.addValue("name", "%" + form.getName() + "%");
+		}
+	
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND i.brand = :brand";
+			param.addValue("brand",form.getBrand());
+		}
+
 		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
-		
+
+		System.out.println(sql);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
+		
 		System.out.println(itemList);
+	
 		return itemList;
 
 	}
+
 	/**
 	 * 大中カテゴリ検索
+	 * 
 	 * @param dai
 	 * @param chu
 	 * @param offset
 	 * @return
 	 */
-	public List<Item> selectCategory(Integer dai, Integer chu,Integer offset) {
-		
-		String sql= "SELECT  \r\n" + 
-				"i.id i_id,\r\n" + 
-				"i.name i_name ,\r\n" + 
-				"i.condition i_condition, \r\n" + 
-				"i.category i_category, \r\n" + 
-				"i.brand i_brand,\r\n" + 
-				"i.price i_price,\r\n" + 
-				"i.shipping i_shipping,\r\n" + 
-				"i.description i_description,\r\n" + 
-				"c1.id c1_id ,\r\n" + 
-				"c2.id c2_id,\r\n" + 
-				"c2.parent c2_parent ,\r\n" + 
-				"c1.name_all c1_name_all ,\r\n" + 
-				"c1.name c1_name,\r\n" + 
-				"c2.name c2_name,\r\n" + 
-				"c3.id c3_id ,\r\n" + 
-				"c3.name c3_name\r\n" + 
-				"from items i\r\n" + 
-				"left join category c1 on c1.id = i.category\r\n" + 
-				"left join category c2 on c1.parent = c2.id \r\n" + 
-				"left join category c3 on c2.parent = c3.id\r\n" + 
-				" where 1=1";
-				
+	public List<Item> selectCategory(Integer dai, Integer chu, Integer offset, SearchForm form) {
+
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ " where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		
-	 if(chu != null) {
+
+		if (chu != null) {
 			sql += " AND  c2.id = :chu";
-			param.addValue("chu", chu);//中カテゴリ
-		}else if (dai!= null) {
+			param.addValue("chu", chu);// 中カテゴリ
+		} else if (dai != null) {
 			sql += " AND c2.parent = :dai";
-			param.addValue("dai", dai);//大カテゴリ
+			param.addValue("dai", dai);// 大カテゴリ
+		}
+		if (!StringUtils.isEmpty(form.getName())) {
+			sql += " AND i.name LIKE :name";
+			param.addValue("name", "%" + form.getName() + "%");
 		}
 		
-		
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND i.brand = :brand";
+			param.addValue("brand", form.getBrand());
+		}
+
 		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
-		
+
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
 	}
-	
+
 	/**
 	 * 大カテゴリ検索
+	 * 
 	 * @param dai
 	 * @param offset
 	 * @return
 	 */
-	public List<Item> selectCategory(Integer dai, Integer offset) {
-		
-		String sql= "SELECT  \r\n" + 
-				"i.id i_id,\r\n" + 
-				"i.name i_name ,\r\n" + 
-				"i.condition i_condition, \r\n" + 
-				"i.category i_category, \r\n" + 
-				"i.brand i_brand,\r\n" + 
-				"i.price i_price,\r\n" + 
-				"i.shipping i_shipping,\r\n" + 
-				"i.description i_description,\r\n" + 
-				"c1.id c1_id ,\r\n" + 
-				"c2.id c2_id,\r\n" + 
-				"c2.parent c2_parent ,\r\n" + 
-				"c1.name_all c1_name_all ,\r\n" + 
-				"c1.name c1_name,\r\n" + 
-				"c2.name c2_name,\r\n" + 
-				"c3.id c3_id ,\r\n" + 
-				"c3.name c3_name\r\n" + 
-				"from items i\r\n" + 
-				"left join category c1 on c1.id = i.category\r\n" + 
-				"left join category c2 on c1.parent = c2.id \r\n" + 
-				"left join category c3 on c2.parent = c3.id\r\n" + 
-				"where 1=1";
-				
+	public List<Item> selectCategory(Integer dai, Integer offset, SearchForm form) {
+
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		
-		if (dai!= null) {
+
+		if (dai != null) {
 			sql += " AND c2.parent = :dai";
-			param.addValue("dai", dai);//大カテゴリ
+			param.addValue("dai", dai);// 大カテゴリ
 		}
-		
-		
+
+		// 商品名（あいまい検索）
+		if (!StringUtils.isEmpty(form.getName())) {
+			sql += " AND i.name LIKE :name";
+			param.addValue("name", "%" + form.getName() + "%");
+		}
+		// ブランド名
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND i.brand = :brand";
+			param.addValue("brand", form.getBrand());
+		}
+
 		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
-		
+
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
 	}
 
-	public List<Item> itemList(String name, Integer offset) {
-		//String sql = "select i.id i_id, i.name i_name , i.condition i_condition, i.category i_category, i.brand i_brand,i.price i_price,i.shipping i_shipping,i.description i_description,c1.id c1_id ,c2.parent c2_parent ,c2.id c2_id ,c1.name_all c1_name_all from items i left join category c1 on c1.id = i.category  left join category c2 on c1.id = c2.parent   WHERE name LIKE :name LIMIT 20 offset :offset ";
-		String sql= "SELECT  \r\n" + 
-				"i.id i_id,\r\n" + 
-				"i.name i_name ,\r\n" + 
-				"i.condition i_condition, \r\n" + 
-				"i.category i_category, \r\n" + 
-				"i.brand i_brand,\r\n" + 
-				"i.price i_price,\r\n" + 
-				"i.shipping i_shipping,\r\n" + 
-				"i.description i_description,\r\n" + 
-				"c1.id c1_id ,\r\n" + 
-				"c2.id c2_id,\r\n" + 
-				"c2.parent c2_parent ,\r\n" + 
-				"c1.name_all c1_name_all ,\r\n" + 
-				"c1.name c1_name,\r\n" + 
-				"c2.name c2_name,\r\n" + 
-				"c3.id c3_id ,\r\n" + 
-				"c3.name c3_name\r\n" + 
-				"from items i\r\n" + 
-				"left join category c1 on c1.id = i.category\r\n" + 
-				"left join category c2 on c1.parent = c2.id \r\n" + 
-				"left join category c3 on c2.parent = c3.id\r\n" + 
-				"WHERE name LIKE :name LIMIT 20 offset :offset ";
-				
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%").addValue("offset",offset);
-		System.out.println(name);
-		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-		return itemList;
-
-	}
 	
 	/**
+	 * カテゴリ選択なしの検索.
+	 * @param name
+	 * @param offset
+	 * @param form
+	 * @return
+	 */
+	public List<Item> itemList(Integer offset, SearchForm form) {
+//		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+//				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+//				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+//				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+//				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+//				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+//				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+//				+ "WHERE 1=1";
+//		
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "where 1=1 AND i.name Like :name";
+
+		MapSqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + form.getName() + "%");
+			
+				if (!StringUtils.isEmpty(form.getBrand())) {
+					sql += " AND i.brand = :brand";
+					param.addValue("brand", form.getBrand());
+				}
+				
+				sql += " LIMIT 20 offset :offset";
+				param.addValue("offset", offset);
+		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
+		
+		return itemList;
+
+	}
+
+	/**
 	 * 商品の追加を行う.
+	 * 
 	 * @param item
 	 */
 	public void addItem(Item item) {
-		String sql="insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
+		String sql = "insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
 		template.update(sql, param);
 	}

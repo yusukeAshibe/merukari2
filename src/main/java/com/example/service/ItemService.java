@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Item;
+import com.example.form.SearchForm;
 import com.example.repository.ItemRepository;
 
 @Service
@@ -44,19 +45,19 @@ public class ItemService {
 	}
 
 	/**
-	 * 名前検索
+	 * 名前のみの検索.
 	 * 
 	 * @param name
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchItem(String name, Integer page) {
+	public List<Item> searchItem(Integer page,SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.itemList(name, offset);
+		List<Item> itemList = itemRepository.itemList( offset,form);
 		return itemList;
 	}
 
@@ -68,13 +69,13 @@ public class ItemService {
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer syo, Integer page) {
+	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer syo, Integer page,SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai, chu, syo, offset);
+		List<Item> itemList = itemRepository.selectCategory(dai, chu, syo, offset,form);
 		return itemList;
 
 	}
@@ -86,13 +87,13 @@ public class ItemService {
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer page) {
+	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer page,SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai, chu, offset);
+		List<Item> itemList = itemRepository.selectCategory(dai, chu, offset,form);
 		return itemList;
 
 	}
@@ -103,13 +104,13 @@ public class ItemService {
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer page) {
+	public List<Item> searchCategoryItem(Integer dai, Integer page,SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai,offset);
+		List<Item> itemList = itemRepository.selectCategory(dai,offset,form);
 		return itemList;
 	}
 	
