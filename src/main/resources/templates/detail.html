@@ -31,10 +31,10 @@
     <div id="navbar" class="collapse navbar-collapse">
       <div>
         <ul class="nav navbar-nav navbar-right">
-          <li><a id="logout" href="./login.html">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
+          <li><a id="logout"  sec:authorize="hasRole('ROLE_USER')" href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
         </ul>
         <p class="navbar-text navbar-right">
-          <span id="loginName">user: userName</span>
+          <span id="loginName"th:text="${email}">user: userName</span>
         </p>
       </div>
     </div>
@@ -78,7 +78,8 @@
           </tr>
         </tbody>
       </table>
-      <a type="button" class="btn btn-default" th:href="@{/edit/to-edit}"href="./edit.html"><i class="fa fa-pencil-square-o"></i>&nbsp;edit</a>
+      <a type="button" class="btn btn-default" th:href="@{'/edit/to-edit?id='+${item.id}}"href="./edit.html"><i class="fa fa-pencil-square-o"></i>&nbsp;edit</a>
+    
     </div>
   </div>
 </body>

@@ -37,7 +37,7 @@ public class LoginController {
 	@RequestMapping("/to-login")
 	public String toLogin(Model model, @RequestParam(required = false) String error, @Validated LoginForm form, BindingResult result) {
 		if (error != null) {
-			model.addAttribute("error", "Email or Password is wrong ");
+			model.addAttribute("error", "メールアドレスかパスワードが間違っています ");
 		}
 		if(result.hasErrors()) {
 			return "login.html";

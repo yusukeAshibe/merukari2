@@ -35,9 +35,9 @@ public class SearchForm {
 	private String syoCategory;
 	
 	/**
-	 * ページ数
+	 * 現在のページ
 	 */
-	//@Pattern(regexp="^[0-9]$" ,message="エラー")
+	
 	private String page;
 	
 	/**
@@ -45,6 +45,15 @@ public class SearchForm {
 	 */
 	private String brand;
 	
+	/**
+	 * 前のページ
+	 */
+	private String prevPage;
+	
+	/**
+	 * 次のページ
+	 */
+	private String nextPage;
 
 	public String getBrand() {
 		return brand;
@@ -112,12 +121,44 @@ public class SearchForm {
 	}
 
 
+//	@Override
+//	public String toString() {
+//		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
+//				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + "]";
+//	}
+
+
+	public String getPrevPage() {
+		return prevPage;
+	}
+
+
+	public void setPrevPage(String prevPage) {
+		this.prevPage = prevPage;
+	}
+
+
+	public String getNextPage() {
+		return nextPage;
+	}
+
+
+	public void setNextPage(String nextPage) {
+		this.nextPage = nextPage;
+	}
+
+
 	@Override
 	public String toString() {
 		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
-				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + "]";
+				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + ", prevPage=" + prevPage
+				+ ", nextPage=" + nextPage + "]";
 	}
 
+
+	
+
+	
 	
 
 

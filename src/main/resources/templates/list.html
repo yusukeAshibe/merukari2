@@ -20,6 +20,50 @@
 <!-- <script th:src="@{/js/Category.js}"></script> -->
 
 <script type="text/javascript">
+function first(){
+	console.log("最初のページへ")
+	var page=$('#page').val();
+	var newPage=Number("1");
+	$('#page').val(newPage);
+	
+	form1.submit();
+}
+
+function last(){
+	console.log("最終ページへ");
+	var page=$('#page').val();
+	var totalPage=$('#totalPage').val
+	$('#page').val(totalPage);
+	
+	form1.submit();
+}
+
+function prev(){
+	console.log("prevpage")
+	var page=$('#page').val();
+	page=Number(page);
+	var newPage=(page-1);
+	if(newPage<=0){
+		newPage=1;
+	}
+	console.log(newPage);
+	$('#page').val(newPage);
+	
+	form1.submit();
+}
+function next(){
+	console.log("nextpage");
+	var page=$('#page').val();
+	page=parseInt(page,10);
+	var newPage=(page+1);
+	console.log(newPage);
+	$('#page').val(newPage);
+	//console.log(page)
+	//page++;
+	//console.log(page)
+	form1.submit();
+}
+
 function aaaa(){
 	console.log("ffff");
 	$('#chuCategory').val("");
@@ -82,7 +126,7 @@ function submit3(value) {
 
   <div id="main" class="container-fluid">
     <!-- addItem link -->
-    <div id="addItemButton">
+    <div id="addItemButton" align="right">
       <a class="btn btn-default" href="./add.html" th:href="@{/addItem/showAddItem}"><i class="fa fa-plus-square-o"></i> Add New Item</a>
     </div>
     <!-- 検索フォーム -->
@@ -90,7 +134,7 @@ function submit3(value) {
       <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" th:object="${searchForm}">
        
         <div class="form-group">
-          <input type="input" class="form-control" id="name" name="name" th:field="*{name}" placeholder="item name"/>
+          <input type="text" name="name" th:field="*{name}"class="form-control" id="name"   placeholder="item name"/>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
@@ -119,28 +163,34 @@ function submit3(value) {
         <div class="form-group">
           <input type="text"name="brand" th:field="*{brand}" class="form-control" placeholder="brand"/>
         </div>
-        <div class="form-group"></div>
-        <button type="submit" class="btn btn-default"><i class="fa fa-angle-double-right"></i> search</button>
-        <div align="right">
-        
+        <div class="form-group">
+        <a class="btn btn-default pull-right">search</a> 
+        <div class="input-group col-xs-6" align="right">
        <laber for="page"  style="color:red"></laber>
-     <input name="page" type="text" align="right" th:field="*{page}">
-		 <button type="submit" align="right">Go to page</button>
-      </form>
+     <input name="page" type="text"  th:field="*{page}">
+		<div class="input-group-addon"> <button>Go</button>/<a th:text="${totalPage}" th:value="${totalPage}"></a></div>
+		</div>
+		 </div>
+		
     </div>
 
 
-    <!-- pagination 
-    <div class="pages">
+    <a pagination></a>
+     <div class="pages">
       <nav class="page-nav">
         <ul class="pager">
-          <li class="previous"><a href="#">&larr; prev</a></li>
-          <li class="next"><a href="#">next &rarr;</a></li>
+          <!-- li class="previous"><a th:href="@{'/?nowPage='{page}+'&prevPage=-1+nextPage=0'}">&larr; prev</a>-->
+          <!-- li class="next"><a th:href="@{'/?nowPage='{page}+'&prevPage=0+nextPage=1'}">next &rarr;</a>-->
+
+          <li class="first"><a class="btn btn-default pull-left" onclick="first()">&larr; first page</a></li>
+           <li class="previous"><a class="btn btn-default pull-left" onclick="prev()">&larr; prev</a></li>
+           <!-- SearchForm [id=null, name=, parent=5, chuCategory=23, syoCategory=235, page=1, brand=, prevPage=null, nextPage=null]-->
+           <li class="last"><a class="btn btn-default pull-right" onclick="last()">&rarr; last page</a></li>
+           <li class="next"><a class="btn btn-default pull-right" onclick="next()">next &rarr;</a></li>
         </ul>
       </nav>
-    </div>-->
-    
 	</div>
+	 </form>
     <!-- table -->
  <!--   <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" > -->
     <div class="table-responsive">
@@ -171,6 +221,7 @@ function submit3(value) {
         <tbody>
         </tbody>
       </table>
+       <div align="right" th:text="${count}+' items'"></div>
     </div>  
 <!--   </form> --> 
     
@@ -184,12 +235,16 @@ function submit3(value) {
 　 				    }
 			</script-->
 
-   <!-- <a pagination ></a>
+    <!-- a pagination></a>
      <div class="pages">
       <nav class="page-nav">
         <ul class="pager">
-          <li class="previous"><a href="#">&larr; prev</a></li>
-          <li class="next"><a href="#">next &rarr;</a></li>
+          <!--  li class="previous"><a th:href="@{'/?nowPage='{page}+'&prevPage=-1+nextPage=0'}">&larr; prev</a>
+          <!--  li class="next"><a th:href="@{'/?nowPage='{page}+'&prevPage=0+nextPage=1'}">next &rarr;</a>
+           <li class="previous"><a th:href="@{/(page=${page},prevPage=-1,nextPage=0)}">&larr; prev</a></li>
+           <li class="next"><a th:href="@{/(page=${page},prevPage=0,nextPage=1)}">>next &rarr;</a></li>
+          
+         <!--   /?name=&parent=3&chuCategory=16&syoCategory=884&brand=&page=７-->
         </ul>
       </nav>
      

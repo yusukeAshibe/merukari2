@@ -37,7 +37,7 @@ public class CategoryRepository {
 	 * @return　親カテゴリ
 	 */
 	public List<Category> parentCategoryList(){
-		String sql =" select * from category where parent is null ";
+		String sql =" select * from category where parent is null order by name ";
 		List <Category> parentCategoryList = template.query(sql, ITEM_ROW_MAPPER);
 		return parentCategoryList;
 	}
@@ -48,7 +48,7 @@ public class CategoryRepository {
 	 * @return　中カテゴリ
 	 */
 	public List<Category> categoryList(Integer parent){
-		String sql ="select * from category where parent=:parent and name_all is null";
+		String sql ="select * from category where parent=:parent and name_all is null order by name";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("parent", parent);
 	    List<Category> categoryList = template.query(sql, param, ITEM_ROW_MAPPER);
 	
@@ -62,7 +62,7 @@ public class CategoryRepository {
 	 * @return
 	 */
 	public List<Category> childCategoryList(Integer parent){
-		String sql ="select * from category where parent=:parent and name_all is not null";
+		String sql ="select * from category where parent=:parent and name_all is not null order by name";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("parent", parent);
 	    List<Category> categoryList = template.query(sql, param, ITEM_ROW_MAPPER);
 		//List<Category> categoryList = template.query(sql, ITEM_ROW_MAPPER);

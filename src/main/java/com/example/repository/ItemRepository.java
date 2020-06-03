@@ -163,26 +163,21 @@ public class ItemRepository {
 			param.addValue("dai", dai);// 大カテゴリ
 		}
 
-		
-		
 		if (!StringUtils.isEmpty(form.getName())) {
 			sql += " AND i.name LIKE :name";
 			param.addValue("name", "%" + form.getName() + "%");
 		}
-	
+
 		if (!StringUtils.isEmpty(form.getBrand())) {
 			sql += " AND i.brand = :brand";
-			param.addValue("brand",form.getBrand());
+			param.addValue("brand", form.getBrand());
 		}
 
-		sql += " LIMIT 20 offset :offset";
+		sql += " order by i.id LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
 
-		System.out.println(sql);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-		
-		System.out.println(itemList);
-	
+
 		return itemList;
 
 	}
@@ -219,15 +214,15 @@ public class ItemRepository {
 			sql += " AND i.name LIKE :name";
 			param.addValue("name", "%" + form.getName() + "%");
 		}
-		
+
 		if (!StringUtils.isEmpty(form.getBrand())) {
 			sql += " AND i.brand = :brand";
 			param.addValue("brand", form.getBrand());
 		}
 
-		sql += " LIMIT 20 offset :offset";
+		sql += " order by i.id LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
-
+		
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
@@ -269,7 +264,7 @@ public class ItemRepository {
 			param.addValue("brand", form.getBrand());
 		}
 
-		sql += " LIMIT 20 offset :offset";
+		sql += " order by i.id LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
 
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
@@ -277,9 +272,9 @@ public class ItemRepository {
 
 	}
 
-	
 	/**
 	 * カテゴリ選択なしの検索.
+	 * 
 	 * @param name
 	 * @param offset
 	 * @param form
@@ -305,16 +300,16 @@ public class ItemRepository {
 				+ "where 1=1 AND i.name Like :name";
 
 		MapSqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + form.getName() + "%");
-			
-				if (!StringUtils.isEmpty(form.getBrand())) {
-					sql += " AND i.brand = :brand";
-					param.addValue("brand", form.getBrand());
-				}
-				
-				sql += " LIMIT 20 offset :offset";
-				param.addValue("offset", offset);
+
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND i.brand = :brand";
+			param.addValue("brand", form.getBrand());
+		}
+
+		sql += " order by i.id LIMIT 20 offset :offset";
+		param.addValue("offset", offset);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-		
+
 		return itemList;
 
 	}
@@ -328,6 +323,42 @@ public class ItemRepository {
 		String sql = "insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
 		template.update(sql, param);
+	}
+
+	/**
+	 * 検索された商品の数量を数える
+	 * @param form
+	 */
+	public Integer countItem(SearchForm form) {
+		String sql = "select count(*) from items i \r\n" + "left join category c1 on c1.id = i.category \r\n"
+				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id where 1=1";
+
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		
+		if ( !(StringUtils.isEmpty(form.getSyoCategory()))) {
+			System.out.println("小カテゴリの選択"+form);
+			sql += " AND c1.id = :sho";
+			param.addValue("sho", Integer.parseInt(form.getSyoCategory()));// 小カテゴリ
+		} else if (!(StringUtils.isEmpty(form.getChuCategory()))) {
+			sql += " AND  c2.id = :chu";
+			param.addValue("chu", Integer.parseInt(form.getChuCategory()));// 中カテゴリ
+		} else if (!(StringUtils.isEmpty(form.getParent()))) {
+			sql += " AND c2.parent = :dai";
+			param.addValue("dai", Integer.parseInt(form.getParent()));// 大カテゴリ
+		}
+		
+		// 商品名（あいまい検索）
+		if (!StringUtils.isEmpty(form.getName())) {
+			sql += " AND i.name LIKE :name";
+			param.addValue("name", "%" + form.getName() + "%");
+		}
+		// ブランド名
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND brand = :brand";
+			param.addValue("brand", form.getBrand());
+		}
+		Integer count = template.queryForObject(sql, param,Integer.class);
+		return count;
 	}
 
 }

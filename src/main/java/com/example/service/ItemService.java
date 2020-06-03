@@ -29,6 +29,7 @@ public class ItemService {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
+		
 		List<Item> itemList = itemRepository.findAll(offset);
 		return itemList;
 
@@ -120,5 +121,10 @@ public class ItemService {
 	 */
 	public void addItem(Item item) {
 		itemRepository.addItem(item);
+	}
+	
+	public Integer countItem(SearchForm form){
+		Integer count = itemRepository.countItem(form);
+		return count;
 	}
 }

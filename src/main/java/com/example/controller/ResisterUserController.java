@@ -54,7 +54,7 @@ public class ResisterUserController {
 		User error = userService.findByEmail(form.getEmail());
 
 		if (!(error == null)) {
-			result.rejectValue("email", "", "Already registered");
+			result.rejectValue("email", "", "このメールアドレスは既に登録されています");
 		}
 		
 		if (result.hasErrors()) {
