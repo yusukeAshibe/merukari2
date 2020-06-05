@@ -61,6 +61,7 @@ public class ItemRepository {
 		item.setDaiName(rs.getString("c3_name"));
 		item.setChuName(rs.getString("c2_name"));
 		item.setSyoName(rs.getString("c1_name"));
+		item.setConditionName(rs.getString("co_name"));
 
 		return item;
 	};
@@ -70,22 +71,133 @@ public class ItemRepository {
 	 * 
 	 * @return
 	 */
-	public List<Item> findAll(Integer offset) {
+	public List<Item> findAll(Integer offset, SearchForm form) {
 
 		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
 				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
 				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
 				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
-				+ "order by i.id LIMIT 20 offset :offset";
-
-//
-//		String sql = "SELECT  i.id i_id, i.name i_name , i.condition i_condition, i.category i_category, i.brand i_brand,i.price i_price,i.shipping i_shipping,i.description i_description,c1.id c1_id,c2.id c2_id ,c2.parent c2_parent ,c1.name_all c1_name_all,c1.name c1_name,c2.name c2_name ,c3.id c3_id ,\r\n" + 
-//				"c3.name c3_name from items i left join category c1 on c1.id = i.category  left join category c2 on c1.id = c2.parent left join category c3 on c2.parent = c3.id  LIMIT 20 offset :offset ";
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id\r\n"
+				+ "left join condition co on co.id=i.condition where 1=1";
 		MapSqlParameterSource param = new MapSqlParameterSource().addValue("offset", offset);
+
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
+		}
+
+		if (form.getSortPrice() == null) {
+			sql += " order by i.price,i.name";
+		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
+			sql += " order by i.price,i.name";
+		} else if (form.getSortPrice().equals("Ascending")) {
+			sql += " order by i.price ,i.name";
+		} else if (form.getSortPrice().equals("Descending")) {
+			sql += " order by i.price desc ,i.name";
+		}
+//		}else if (form.getSortCondition().equals("brandNew")) {
+//			sql += " order by i.condition ,i.name";
+//		} else if (form.getSortCondition().equals("secondHand")) {
+//			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
+//		} else if (form.getSortCondition().equals("unknown")) {
+//			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
+//		}
+
+		if (!StringUtils.isEmpty(form.getSortCondition())) {
+			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+		}
+
+		sql += " LIMIT 20 offset :offset";
+		System.out.println(sql);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
+		return itemList;
+
+	}
+
+	/**
+	 * カテゴリ選択なしの検索.
+	 * 
+	 * @param name
+	 * @param offset
+	 * @param form
+	 * @return
+	 */
+
+	public List<Item> itemList(Integer offset, SearchForm form) {
+//		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+//				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+//				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+//				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+//				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
+//				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
+//				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+//				+ "WHERE 1=1";
+//		
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name  ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
+				+ "where 1=1 AND i.name Like :name";
+
+		MapSqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + form.getName() + "%");
+
+		System.out.println("カテゴリなし");
+		if (!StringUtils.isEmpty(form.getBrand())) {
+			sql += " AND i.brand = :brand";
+			param.addValue("brand", form.getBrand());
+		}
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 desc ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
+		}
+
+		if (form.getSortPrice() == null) {
+			sql += " order by i.price,i.name";
+		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
+			sql += " order by i.price,i.name";
+		} else if (form.getSortPrice().equals("Ascending")) {
+			sql += " order by i.price ,i.name";
+		} else if (form.getSortPrice().equals("Descending")) {
+			sql += " order by i.price desc ,i.name";
+		}	
+		if (!StringUtils.isEmpty(form.getSortCondition())) {
+				sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+				param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+			}
+//		} else if (form.getSortCondition().equals("brandNew")) {
+//			sql += " order by i.condition=1 ,i.name";
+//		} else if (form.getSortCondition().equals("secondHand")) {
+//			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
+//		} else if (form.getSortCondition().equals("unknown")) {
+//			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
+//		}
+
+		sql += " LIMIT 20 offset :offset";
+		param.addValue("offset", offset);
+		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
+		System.out.println(sql);
 		return itemList;
 
 	}
@@ -103,10 +215,12 @@ public class ItemRepository {
 				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
 				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
 				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
 				+ "where i.id=:id ";
+
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER2);
 		return item;
@@ -146,9 +260,10 @@ public class ItemRepository {
 				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
 				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
 				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name  ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
 				+ "where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -173,9 +288,44 @@ public class ItemRepository {
 			param.addValue("brand", form.getBrand());
 		}
 
-		sql += " order by i.id LIMIT 20 offset :offset";
-		param.addValue("offset", offset);
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
+		}
 
+		if (form.getSortPrice() == null) {
+			sql += " order by i.price,i.name";
+		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
+			sql += " order by i.price,i.name";
+		} else if (form.getSortPrice().equals("Ascending")) {
+			sql += " order by i.price ,i.name";
+		} else if (form.getSortPrice().equals("Descending")) {
+			sql += " order by i.price desc ,i.name";
+		}
+		
+		if (!StringUtils.isEmpty(form.getSortCondition())) {
+			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+		}
+//		
+//		else if (form.getSortCondition().equals("brandNew")) {
+//			sql += " order by i.condition ,i.name";
+//		} else if (form.getSortCondition().equals("secondHand")) {
+//			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
+//		} else if (form.getSortCondition().equals("unknown")) {
+//			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
+//		}
+
+		sql += " LIMIT 20 offset :offset";
+		param.addValue("offset", offset);
+		System.out.println("大中小");
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 
 		return itemList;
@@ -196,9 +346,10 @@ public class ItemRepository {
 				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
 				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
 				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name  ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
 				+ " where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -220,9 +371,42 @@ public class ItemRepository {
 			param.addValue("brand", form.getBrand());
 		}
 
-		sql += " order by i.id LIMIT 20 offset :offset";
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND  i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
+		}
+
+		if (form.getSortPrice() == null) {
+			sql += " order by i.price,i.name";
+		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
+			sql += " order by i.price,i.name";
+		} else if (form.getSortPrice().equals("Ascending")) {
+			sql += " order by i.price ,i.name";
+		} else if (form.getSortPrice().equals("Descending")) {
+			sql += " order by i.price desc ,i.name";
+		} else if (form.getSortCondition().equals("brandNew")) {
+			sql += " order by i.condition ,i.name";	
+		} 
+		if (!StringUtils.isEmpty(form.getSortCondition())) {
+			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+		}
+//		else if (form.getSortCondition().equals("secondHand")) {
+//			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
+//		} else if (form.getSortCondition().equals("unknown")) {
+//			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
+//		}
+
+		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
-		
+		System.out.println("大中");
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
@@ -241,9 +425,10 @@ public class ItemRepository {
 				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
 				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
 				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name  ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
 				+ "where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
@@ -263,53 +448,45 @@ public class ItemRepository {
 			sql += " AND i.brand = :brand";
 			param.addValue("brand", form.getBrand());
 		}
-
-		sql += " order by i.id LIMIT 20 offset :offset";
-		param.addValue("offset", offset);
-
-		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-		return itemList;
-
-	}
-
-	/**
-	 * カテゴリ選択なしの検索.
-	 * 
-	 * @param name
-	 * @param offset
-	 * @param form
-	 * @return
-	 */
-	public List<Item> itemList(Integer offset, SearchForm form) {
-//		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
-//				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
-//				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
-//				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-//				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-//				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-//				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
-//				+ "WHERE 1=1";
-//		
-		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
-				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
-				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
-				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n" + "c3.name c3_name\r\n"
-				+ "from items i\r\n" + "left join category c1 on c1.id = i.category\r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id\r\n"
-				+ "where 1=1 AND i.name Like :name";
-
-		MapSqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + form.getName() + "%");
-
-		if (!StringUtils.isEmpty(form.getBrand())) {
-			sql += " AND i.brand = :brand";
-			param.addValue("brand", form.getBrand());
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
 		}
 
-		sql += " order by i.id LIMIT 20 offset :offset";
+		if (form.getSortPrice() == null) {
+			sql += " order by i.price,i.name";
+		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
+			sql += " order by i.price,i.name";
+		} else if (form.getSortPrice().equals("Ascending")) {
+			sql += " order by i.price ,i.name";
+		} else if (form.getSortPrice().equals("Descending")) {
+			sql += " order by i.price desc ,i.name";
+		} 
+		
+		if (!StringUtils.isEmpty(form.getSortCondition())) {
+			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+		}
+		
+		
+//		else if (form.getSortCondition().equals("brandNew")) {
+//			sql += " order by i.condition ,i.name";
+//		} else if (form.getSortCondition().equals("secondHand")) {
+//			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
+//		} else if (form.getSortCondition().equals("unknown")) {
+//			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
+//		}
+		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
+		System.out.println("大");
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-
 		return itemList;
 
 	}
@@ -327,16 +504,18 @@ public class ItemRepository {
 
 	/**
 	 * 検索された商品の数量を数える
+	 * 
 	 * @param form
 	 */
 	public Integer countItem(SearchForm form) {
 		String sql = "select count(*) from items i \r\n" + "left join category c1 on c1.id = i.category \r\n"
-				+ "left join category c2 on c1.parent = c2.id \r\n" + "left join category c3 on c2.parent = c3.id where 1=1";
+				+ "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id where 1=1";
 
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		
-		if ( !(StringUtils.isEmpty(form.getSyoCategory()))) {
-			System.out.println("小カテゴリの選択"+form);
+
+		if (!(StringUtils.isEmpty(form.getSyoCategory()))) {
+			System.out.println("小カテゴリの選択" + form);
 			sql += " AND c1.id = :sho";
 			param.addValue("sho", Integer.parseInt(form.getSyoCategory()));// 小カテゴリ
 		} else if (!(StringUtils.isEmpty(form.getChuCategory()))) {
@@ -346,7 +525,7 @@ public class ItemRepository {
 			sql += " AND c2.parent = :dai";
 			param.addValue("dai", Integer.parseInt(form.getParent()));// 大カテゴリ
 		}
-		
+
 		// 商品名（あいまい検索）
 		if (!StringUtils.isEmpty(form.getName())) {
 			sql += " AND i.name LIKE :name";
@@ -357,7 +536,18 @@ public class ItemRepository {
 			sql += " AND brand = :brand";
 			param.addValue("brand", form.getBrand());
 		}
-		Integer count = template.queryForObject(sql, param,Integer.class);
+		if (form.getCondition() == null) {
+			sql += "";
+		} else if (("").equals(form.getCondition())) {
+			sql += "";
+		} else if (form.getCondition().equals("brandNew")) {
+			sql += " AND i.condition=1";
+		} else if (form.getCondition().equals("secondHand")) {
+			sql += " AND i.condition=2 ";
+		} else if (form.getCondition().equals("unknown")) {
+			sql += " AND i.condition=3 ";
+		}
+		Integer count = template.queryForObject(sql, param, Integer.class);
 		return count;
 	}
 

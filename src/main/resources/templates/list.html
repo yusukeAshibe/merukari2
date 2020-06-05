@@ -1,231 +1,359 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- css -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
-  <!--  link rel="stylesheet" href="./mercari.css"/>-->
-  <!-- script -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <title>Rakus Items</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<!--  link rel="stylesheet" href="./mercari.css"/>-->
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<title>Rakus Items</title>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <!-- <script th:src="@{/js/Category.js}"></script> -->
 
 <script type="text/javascript">
-function first(){
-	console.log("最初のページへ")
-	var page=$('#page').val();
-	var newPage=Number("1");
-	$('#page').val(newPage);
-	
-	form1.submit();
-}
+//first page を押したとき１ページ目に戻る
+	function first() {
+		console.log("最初のページへ")
+		var page = $('#page').val();
+		var newPage = Number("1");
+		$('#page').val(newPage);
 
-function last(){
-	console.log("最終ページへ");
-	var page=$('#page').val();
-	var totalPage=$('#totalPage').val
-	$('#page').val(totalPage);
-	
-	form1.submit();
-}
-
-function prev(){
-	console.log("prevpage")
-	var page=$('#page').val();
-	page=Number(page);
-	var newPage=(page-1);
-	if(newPage<=0){
-		newPage=1;
+		form1.submit();
 	}
-	console.log(newPage);
-	$('#page').val(newPage);
-	
-	form1.submit();
-}
-function next(){
-	console.log("nextpage");
-	var page=$('#page').val();
-	page=parseInt(page,10);
-	var newPage=(page+1);
-	console.log(newPage);
-	$('#page').val(newPage);
-	//console.log(page)
-	//page++;
-	//console.log(page)
-	form1.submit();
-}
+//last pageを押したとき最終ページに行く
+	function last() {
+		console.log("最終ページへ");
+		var page = $('#page').val();
+		var totalPage = $('#totalPage').text();
+		totalpage=Number(totalPage);
+		var lastpage=$('#page').val(totalPage);
 
-function aaaa(){
-	console.log("ffff");
-	$('#chuCategory').val("");
-   	$('#syoCategory').val("");
-	form1.submit();
-}
-
-
-
-function submit() {
-	//const chyCategory=document.form1.parent
-	// window.location.href = selected.value;
-	//const id = chuCategory.selected.value;
-	//var id=document.getElementById("id").value;
-	//var id=value;
-	//var selectedValue = $("#parent").val();
-	//	form1.submit();
-}
-function submit2(value) {
-	//const chyCategory=document.form1.parent
-	// window.location.href = selected.value;
-	//const id = chuCategory.selected.value;
-	//var id=document.getElementById("id").value;
-	//var id=value;
 		form1.submit();
-}
-function submit3(value) {
-	
+	}
+
+// prevを押したときページを一つ減らす
+	function prev() {
+		console.log("prevpage")
+		var page = $('#page').val();
+		page = Number(page);
+		var newPage = (page - 1);
+		if (newPage <= 0) {
+			newPage = 1;
+		}
+		console.log(newPage);
+		$('#page').val(newPage);
+
 		form1.submit();
-}
+	}
+	//nextを押したときページを一つ増やす
+	function next() {
+		console.log("nextpage");
+		var page = $('#page').val();
+		page = parseInt(page, 10);
+		var newPage = (page + 1);
+		console.log(newPage);
+		$('#page').val(newPage);
+		var page = $('#page').val();
+		var totalPage = $('#totalPage').text();
+		if (page > totalPage) {
+			$('#page').val(totalPage);
+		}
 
+		//console.log(page)
+		//page++;
+		//console.log(page)
+		form1.submit();
+	}
+//大カテゴリを押したとき
+	function aaaa() {
+		console.log("ffff");
+		$('#chuCategory').val("");
+		$('#syoCategory').val("");
+		var page = $('#page').val();
+		var newPage = Number("1");
+		$('#page').val(newPage);
+		form1.submit();
+	}
+//中カテゴリを押したとき
+	function submit2(value) {
+		$('#syoCategory').val("");
+		var page = $('#page').val();
+		var newPage = Number("1");
+		$('#page').val(newPage);
+		form1.submit();
 
- 
- </script>
+	}
+//小カテゴリを押したとき
+	function submit3(value) {
+		var page = $('#page').val();
+		var newPage = Number("1");
+		$('#page').val(newPage);
+		form1.submit();
+	}
+
+	//function sort1(){
+	//	$('#condition').val("");
+	//	
+	//}
+	function sort1(){
+		var a = $('#sortByAmount').val();
+		form1.submit();
+		
+	}
+
+	function sort2() {
+		var a = $('#condition').val();
+		$('#condition').val(a);
+		
+		var page = $('#page').val();
+		var newPage = Number("1");
+		$('#page').val(newPage);
+		form1.submit();
+	}
+
+	$(function() {
+		$('#sortPrice').change(function() {
+			$('#sortCondition').val("");
+			
+		//	var sort = $('#sortByAmount').val();
+		//	if(sort!=''){
+		//		$("#conditionSort").prop('disabled', true);
+		//	}else{
+		//		$("#conditionSort").prop('disabled', false);
+		//	}
+			var page = $('#page').val();
+			var newPage = Number("1");
+			$('#page').val(newPage);
+			form1.submit();
+		});
+		$('#sortCondition').change(function() {
+			$('#sortPrice').val("");
+
+				var page = $('#page').val();
+				var newPage = Number("1");
+				$('#page').val(newPage);
+				form1.submit();
+			
+			});
+
+	});
+</script>
 </head>
 <body>
-  <!-- navbar -->
-  <nav class="navbar navbar-inverse">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus Items</a>
-    </div>
-    <div id="navbar" class="collapse navbar-collapse">
-      <div>
-        <ul class="nav navbar-nav navbar-right">
-         
-         <li><a id="logout"  sec:authorize="hasRole('ROLE_USER')" href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
-          
-        </ul>
-        <p class="navbar-text navbar-right">
-          <span id="loginName"  th:text="${email}">user: userName</span>
-        </p>
-      </div>
-    </div>
-  </nav>
-
-  <div id="main" class="container-fluid">
-    <!-- addItem link -->
-    <div id="addItemButton" align="right">
-      <a class="btn btn-default" href="./add.html" th:href="@{/addItem/showAddItem}"><i class="fa fa-plus-square-o"></i> Add New Item</a>
-    </div>
-    <!-- 検索フォーム -->
-    <div id="forms">
-      <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" th:object="${searchForm}">
-       
-        <div class="form-group">
-          <input type="text" name="name" th:field="*{name}"class="form-control" id="name"   placeholder="item name"/>
-        </div>
-        <div class="form-group"><i class="fa fa-plus"></i></div>
-        <div class="form-group">
-          <select class="form-control" id="parent" name="parent" onchange="aaaa()">
-            <option value="">- parentCategory -</option>
-            <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}" th:name="${parentCategory.id}" th:field="*{parent}">
-             	<input tepe="hidden" th:name="${parentCategory.id}" th:value="${parentCategory.id}">
-             </option>
-           
-          </select>
-         <!-- <form th:action="@{/searchCategory}" method="post"-->
-         
-            <select class="form-control" id="chuCategory" name="chuCategory" onchange="submit2(this.value)">
-            <option value="">- childCategory -</option>
-            <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:field="*{chuCategory}" >- childCategory -</option>
-       
-          </select>
-          <!--/form-->
-          <select class="form-control" id="syoCategory" name="syoCategory" onchange="submit3(this.value)"> 
-            <option value="">- grandChild -</option>
-            <option th:each="childCategory : ${childCategoryList}" th:value="${childCategory.id}" th:text="${childCategory.name}" th:field="*{syoCategory}">grandChild1</option>
-            
-          </select>
-        </div>
-        <div class="form-group"><i class="fa fa-plus"></i></div>
-        <div class="form-group">
-          <input type="text"name="brand" th:field="*{brand}" class="form-control" placeholder="brand"/>
-        </div>
-        <div class="form-group">
-        <a class="btn btn-default pull-right">search</a> 
-        <div class="input-group col-xs-6" align="right">
-       <laber for="page"  style="color:red"></laber>
-     <input name="page" type="text"  th:field="*{page}">
-		<div class="input-group-addon"> <button>Go</button>/<a th:text="${totalPage}" th:value="${totalPage}"></a></div>
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus
+				Items</a>
 		</div>
-		 </div>
-		
-    </div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
 
+					<li><a id="logout" sec:authorize="hasRole('ROLE_USER')"
+						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
 
-    <a pagination></a>
-     <div class="pages">
-      <nav class="page-nav">
-        <ul class="pager">
-          <!-- li class="previous"><a th:href="@{'/?nowPage='{page}+'&prevPage=-1+nextPage=0'}">&larr; prev</a>-->
-          <!-- li class="next"><a th:href="@{'/?nowPage='{page}+'&prevPage=0+nextPage=1'}">next &rarr;</a>-->
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" th:text="${email}">user: userName</span>
+				</p>
+			</div>
+		</div>
+	</nav>
 
-          <li class="first"><a class="btn btn-default pull-left" onclick="first()">&larr; first page</a></li>
-           <li class="previous"><a class="btn btn-default pull-left" onclick="prev()">&larr; prev</a></li>
-           <!-- SearchForm [id=null, name=, parent=5, chuCategory=23, syoCategory=235, page=1, brand=, prevPage=null, nextPage=null]-->
-           <li class="last"><a class="btn btn-default pull-right" onclick="last()">&rarr; last page</a></li>
-           <li class="next"><a class="btn btn-default pull-right" onclick="next()">next &rarr;</a></li>
-        </ul>
-      </nav>
+	<div id="main" class="container-fluid">
+		<!-- addItem link -->
+		<div id="addItemButton" align="right">
+			<a class="btn btn-default" href="./add.html"
+				th:href="@{/addItem/showAddItem}"><i class="fa fa-plus-square-o"></i>
+				Add New Item</a>
+		</div>
+		<!-- 検索フォーム -->
+		<div id="forms">
+			<form name="form1" action="" class="form-inline" role="form"
+				th:action="@{/}" th:object="${searchForm}">
+
+				<div class="form-group">
+					<input type="text" name="name" th:field="*{name}"
+						class="form-control" id="name" placeholder="item name" />
+				</div>
+				<div class="form-group">
+					<i class="fa fa-plus"></i>
+				</div>
+				<div class="form-group">
+					<select class="form-control" id="parent" name="parent"
+						onchange="aaaa()">
+						<option value="">- parentCategory -</option>
+						<option th:each="parentCategory : ${parentCategoryList}"
+							th:value="${parentCategory.id}" th:text="${parentCategory.name}"
+							th:id="${parentCategory.id}" th:name="${parentCategory.id}"
+							th:field="*{parent}"><input tepe="hidden" th:name="${parentCategory.id}" th:value="${parentCategory.id}">
+						</option>
+
+					</select>
+					<!-- <form th:action="@{/searchCategory}" method="post"-->
+
+					<select class="form-control" id="chuCategory" name="chuCategory"
+						onchange="submit2(this.value)">
+						<option value="">- childCategory -</option>
+						<option th:each="category : ${categoryList}"
+							th:value="${category.id}" th:text="${category.name}"
+							th:field="*{chuCategory}">- childCategory -</option>
+
+					</select>
+					<!--/form-->
+					<select class="form-control" id="syoCategory" name="syoCategory"
+						onchange="submit3(this.value)">
+						<option value="">- grandChild -</option>
+						<option th:each="childCategory : ${childCategoryList}"
+							th:value="${childCategory.id}" th:text="${childCategory.name}"
+							th:field="*{syoCategory}">grandChild1</option>
+
+					</select>
+				</div>
+				<div class="form-group">
+					<i class="fa fa-plus"></i>
+				</div>
+				<div class="form-group">
+					<input type="text" name="brand" th:field="*{brand}" class="form-control" placeholder="brand" />
+				</div>
+				<select name="condition" id="condition" onchange="sort2()">
+						<option th:value="${condition}"
+							th:if="${condition!=null&&condition!=''}" th:text="${condition}"></option>
+						<option value="">--</option>
+						<option th:if="${condition!='brandNew'}" value="brandNew">Brand new</option>
+						<option th:if="${condition!='secondHand'}" value="secondHand">Second
+							hand</option>
+						<option th:if="${condition!='unknown'}" value="unknown">unknown</option>
+				</select>
+				<button id="button-search" type="submit" class="btn btn-default">
+					<i class="fa fa-angle-double-right"></i>search
+				</button>
+				
+
+				<div class="text-right">
+					<input name="page" type="number" min="1" th:field="*{page}">
+					 <span align="right" class="pull-right"> 
+						<span>
+						<button id="button-go" class="btn btn-default">Go</button>
+						</span>
+					</span> /<span th:text="${totalPage}" id="totalPage"></span>
+					<div class="btn btn-default pull-left" th:text="${count}+' items'"></div>
+				</div>
+		</div>
 	</div>
-	 </form>
-    <!-- table -->
- <!--   <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" > -->
-    <div class="table-responsive">
-      <table id="item-table" class="table table-hover table-condensed">
-        <thead>
-         <thead>
-          </tr>
-        	<th>name</th>
-            <th>price</th>
-            <th>category</th>
-            <th>brand</th>
-            <th>cond</th>
-          <tr th:each="item : ${itemList}">
-            <td ><a th:text="${item.name}" th:href="@{'/showItemDetail?id='+${item.id}}" >name</a></th>
-            <td th:text="${item.price}">price</td>
-            <td>
-                <a th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='}" th:text="${item.daiName}"></a> /
-                <a th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='+${item.chuCategoryId}}" th:text="${item.chuName}"></a>/
-                <!-- th:href="@{'/?chucategory='+${item.chuCategoryId}}"-->
-                <a th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='+${item.chuCategoryId}+'&syoCategory='+${item.Category}}" th:text="${item.syoName}"></a>
-               <!--   th:href="@{'/?category='+${item.Category}}"-->
-            </td>
-            <td th:text="${item.brand}">brand</td>
-            <td th:text="${item.condition}">cond</td>
-            
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-       <div align="right" th:text="${count}+' items'"></div>
-    </div>  
-<!--   </form> --> 
-    
-     <!--  script type="text/javascript">
+
+
+	<a pagination></a>
+	<div class="pages">
+		<nav class="page-nav">
+			<ul class="pager">
+				<!-- li class="previous"><a th:href="@{'/?nowPage='{page}+'&prevPage=-1+nextPage=0'}">&larr; prev</a>-->
+				<!-- li class="next"><a th:href="@{'/?nowPage='{page}+'&prevPage=0+nextPage=1'}">next &rarr;</a>-->
+
+				<li class="first"><a class="btn btn-default pull-left"
+					onclick="first()">&larr; first page</a></li>
+				<li class="previous"><a class="btn btn-default pull-left"
+					onclick="prev()">&larr; prev</a></li>
+				<li class="last"><a class="btn btn-default pull-right"
+					onclick="last()">&rarr; last page</a></li>
+				<li class="next"><a class="btn btn-default pull-right"
+					onclick="next()">next &rarr;</a></li>
+			</ul>
+		</nav>
+	</div>
+
+	<!-- table -->
+	<!--   <form name="form1" action="" class="form-inline" role="form" th:action="@{/}" > -->
+	<div class="table-responsive">
+		<table id="item-table" class="table table-hover table-condensed">
+			<thead>
+			<thead>
+				</tr>
+				<th>name</th>
+				<th>price 
+				<select name="sortPrice" id="sortPrice">
+						<option th:value="${priceSort}" th:if="${priceSort!=null&&priceSort!=''}" th:text="${priceSort}"></option>
+						<option value="">--</option>
+						<option th:if="${priceSort!='Ascending'}" value="Ascending">Ascending
+						</option>
+						<option th:if="${priceSort!='Descending'}" value="Descending">Descending</option>
+				</select>
+				</th>
+				<th>category</th>
+				<th>brand</th>
+				<th>cond 
+				<!-- select name="sortCondition" id="sortCondition">
+						<option th:value="${conditionSort}" th:if="${conditionSort!=null&&conditionSort!=''}" th:text="${conditionSort}"></option>
+						<option value="">--</option>
+						<option th:if="${conditionSort!='brandNew'}" value="brandNew">BrandNEW</option>
+						<option th:if="${conditionSort!='secondHand'}" value="secondHand">Secondhand</option>
+						<option th:if="${conditionSort!='unknown'}" value="unknown">unknown</option>
+				</select-->
+				<select name="sortCondition" id="sortCondition">
+				<option th:value="1" th:if="${conditionSort=='1'}" >Brand new</option>
+				<option th:value="2" th:if="${conditionSort=='2'}">second hand</option>
+				<option th:value="3" th:if="${conditionSort=='3'}" >unknown</option>
+				<option th:value="4" th:if="${conditionSort=='4'}" >bad</option>
+				<option th:value="5" th:if="${conditionSort=='5'}">good</option>
+				<option value="">--</option>
+				<option th:each="condition : ${conditionList}" th:value="${condition.id}" th:text="${condition.name}"></option>
+				
+				</select>		
+				</th>
+				<tr th:each="item : ${itemList}">
+					<td><a th:text="${item.name}"
+						th:href="@{'/showItemDetail?id='+${item.id}}">name</a>
+					</th>
+					<td th:text="${item.price}">price</td>
+					<td><a
+						th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='}"
+						th:text="${item.daiName}"></a> / <a
+						th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='+${item.chuCategoryId}}"
+						th:text="${item.chuName}"></a>/ <!-- th:href="@{'/?chucategory='+${item.chuCategoryId}}"-->
+						<a
+						th:href="@{'?parent='+${item.daiCategoryId}+'&chuCategory='+${item.chuCategoryId}+'&syoCategory='+${item.Category}}"
+						th:text="${item.syoName}"></a> <!--   th:href="@{'/?category='+${item.Category}}"-->
+					</td>
+					<td th:text="${item.brand}">brand</td>
+					<td th:text="${item.conditionName}">cond</td>
+
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+
+	</div>
+	</form>
+	<!--   </form> -->
+
+	<!--  script type="text/javascript">
 　 				<$(function() {
 　 				    $("#parentCategory").on("change", function(){
 　 				    	var id=$("#id").val();
@@ -235,7 +363,7 @@ function submit3(value) {
 　 				    }
 			</script-->
 
-    <!-- a pagination></a>
+	<!-- a pagination></a>
      <div class="pages">
       <nav class="page-nav">
         <ul class="pager">
@@ -245,11 +373,11 @@ function submit3(value) {
            <li class="next"><a th:href="@{/(page=${page},prevPage=0,nextPage=1)}">>next &rarr;</a></li>
           
          <!--   /?name=&parent=3&chuCategory=16&syoCategory=884&brand=&page=７-->
-        </ul>
-      </nav>
-     
-      <div id="select-page">
-       <!--    <form class="form-inline">
+	</ul>
+	</nav>
+
+	<div id="select-page">
+		<!--    <form class="form-inline">
           <div class="form-group">
             <div class="input-group col-xs-6">
               <label></label>

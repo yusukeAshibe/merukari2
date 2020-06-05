@@ -23,14 +23,14 @@ public class ItemService {
 	 * @param page
 	 * @return
 	 */
-	public List<Item> showItem(Integer page) {
+	public List<Item> showItem(Integer page,SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
 		
-		List<Item> itemList = itemRepository.findAll(offset);
+		List<Item> itemList = itemRepository.findAll(offset,form);
 		return itemList;
 
 	}

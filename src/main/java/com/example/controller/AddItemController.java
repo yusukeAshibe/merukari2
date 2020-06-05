@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Category;
+import com.example.domain.Condition;
 import com.example.domain.Item;
 import com.example.domain.LoginUser;
 import com.example.domain.User;
 import com.example.form.AddItemForm;
 import com.example.repository.ItemRepository;
 import com.example.service.CategoryService;
+import com.example.service.ConditionService;
 import com.example.service.ItemService;
 import com.example.service.UserService;
 import com.zaxxer.hikari.util.SuspendResumeLock;
@@ -48,6 +50,9 @@ public class AddItemController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ConditionService conditionService;
 
 	/**
 	 * 商品追加画面への遷移.
@@ -64,6 +69,7 @@ public class AddItemController {
 		List<Category> parentCategoryList = new ArrayList<>();
 		parentCategoryList = categoryService.parentCategoryList();
 		model.addAttribute("parentCategoryList", parentCategoryList);
+		List<Condition> conditionList= conditionService.findAll();
 
 		return "add.html";
 

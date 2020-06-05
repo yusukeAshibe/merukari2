@@ -64,6 +64,16 @@ public class Item {
 	 * 小カテゴリ名
 	 */
 	private String syoName;
+	
+	/**
+	 *conditionの名前 
+	 */
+	private String conditionName;
+	
+	/**
+	 * アイテムのカテゴリ名
+	 */
+	private String nameAll;
    
     
 
@@ -91,10 +101,7 @@ public class Item {
 		this.syoName = syoName;
 	}
 
-	/**
-	 * アイテムのカテゴリ名
-	 */
-	private String nameAll;
+	
 
 	public Integer getId() {
 		return id;
@@ -184,13 +191,24 @@ public class Item {
 		this.chuCategoryId = chuCategoryId;
 	}
 
+	public String getConditionName() {
+		return conditionName;
+	}
+
+	public void setConditionName(String conditionName) {
+		this.conditionName = conditionName;
+	}
+
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", Condition=" + Condition + ", category=" + category + ", brand="
 				+ brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description
 				+ ", daiCategoryId=" + daiCategoryId + ", chuCategoryId=" + chuCategoryId + ", daiName=" + daiName
-				+ ", chuName=" + chuName + ", syoName=" + syoName + ", nameAll=" + nameAll + "]";
+				+ ", chuName=" + chuName + ", syoName=" + syoName + ", conditionName=" + conditionName + ", nameAll="
+				+ nameAll + "]";
 	}
+
+	
 
 	
 

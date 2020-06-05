@@ -4,6 +4,7 @@ import javax.validation.constraints.Pattern;
 
 /**
  * 入力された検索条件を受け取るフォーム,
+ * 
  * @author ashibe
  *
  */
@@ -28,48 +29,81 @@ public class SearchForm {
 	 * 中カテゴリID
 	 */
 	private String chuCategory;
-	
+
 	/**
 	 * 小カテゴリID
 	 */
 	private String syoCategory;
-	
+
 	/**
 	 * 現在のページ
 	 */
-	
+
 	private String page;
-	
+
 	/**
 	 * ブランド名.
 	 */
 	private String brand;
-	
+
+//	/**
+//	 * 前のページ
+//	 */
+//	private String prevPage;
+//	
+//	/**
+//	 * 次のページ
+//	 */
+//	private String nextPage;
+//	
 	/**
-	 * 前のページ
+	 * 並び替え
 	 */
-	private String prevPage;
-	
+	private String sortPrice;
+
+	private String sortCondition;
+
 	/**
-	 * 次のページ
+	 * 商品の状態
 	 */
-	private String nextPage;
+	private String condition;
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getSortPrice() {
+		return sortPrice;
+	}
+
+	public void setSortPrice(String sortPrice) {
+		this.sortPrice = sortPrice;
+	}
+
+	public String getSortCondition() {
+		return sortCondition;
+	}
+
+	public void setSortCondition(String sortCondition) {
+		this.sortCondition = sortCondition;
+	}
 
 	public String getBrand() {
 		return brand;
 	}
 
-
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
-
 	public Integer parseInt(String parent) {
 		return new Integer(parent);
 	}
-	
-	
+
 	public String getId() {
 		return id;
 	}
@@ -93,8 +127,6 @@ public class SearchForm {
 	public void setParent(String parent) {
 		this.parent = parent;
 	}
-
-	
 
 	public String getChuCategory() {
 		return chuCategory;
@@ -120,50 +152,11 @@ public class SearchForm {
 		this.page = page;
 	}
 
-
-//	@Override
-//	public String toString() {
-//		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
-//				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + "]";
-//	}
-
-
-	public String getPrevPage() {
-		return prevPage;
-	}
-
-
-	public void setPrevPage(String prevPage) {
-		this.prevPage = prevPage;
-	}
-
-
-	public String getNextPage() {
-		return nextPage;
-	}
-
-
-	public void setNextPage(String nextPage) {
-		this.nextPage = nextPage;
-	}
-
-
 	@Override
 	public String toString() {
 		return "SearchForm [id=" + id + ", name=" + name + ", parent=" + parent + ", chuCategory=" + chuCategory
-				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + ", prevPage=" + prevPage
-				+ ", nextPage=" + nextPage + "]";
+				+ ", syoCategory=" + syoCategory + ", page=" + page + ", brand=" + brand + ", sortPrice=" + sortPrice
+				+ ", sortCondition=" + sortCondition + ", condition=" + condition + "]";
 	}
-
-
-	
-
-	
-	
-
-
-	
-
-	
 
 }
