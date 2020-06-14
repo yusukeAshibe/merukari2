@@ -4,39 +4,54 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class EditForm {
+	
+	/**
+	 * 商品ID
+	 */
+	private String id;
 
 	/**
 	 *商品名 
 	 */
-	@NotBlank(message="入力必須です")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$" ,message="半角英数字で入力してください")
+	//@NotBlank(message="入力必須です")
+	//@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$" ,message="半角英数字で入力してください")
+	@NotBlank(message="Required field")
+	@Pattern(regexp="^[ -~｡-ﾟ]{1,100}$" ,message="type using half-width characters.")
 	
 	private String name;
 	
 	/**
 	 * 状態
 	 */
-	@NotBlank(message="入力必須です")
-	@Pattern(regexp="^[0-9]$", message="半角数字で入力してください")
+//	@NotBlank(message="入力必須です")
+//	@Pattern(regexp="^[0-9]$", message="半角数字で入力してください")
+	
+	@NotBlank(message="Required field")
+	@Pattern(regexp="^[0-9]$", message="type using half-width digit.")
 	private String condition;
 	
 	/**
 	 * 小カテゴリID
 	 */
-	@NotBlank(message="小カテゴリまで選択必須です")
+	//@NotBlank(message="小カテゴリまで選択必須です")
+	@NotBlank(message="Please choose it till the last")
 	private String category;
 	
 	/**
 	 * ブランド
 	 */
-	@Pattern(regexp="^[ -~｡-ﾟ]{0,100}$", message="半角英数字で入力してください")
+	//@Pattern(regexp="^[ -~｡-ﾟ]{0,100}$", message="半角英数字で入力してください")
+	@Pattern(regexp="^[ -~｡-ﾟ]{0,100}$", message="type using half-width characters.")
 	private String brand;
 	
 	/**
 	 * 価格
 	 */
-	@NotBlank(message="入力必須です")
-	@Pattern(regexp="^[0-9]{1,10}$" ,message="半角数字で入力してください")
+//	@NotBlank(message="入力必須です")
+//	@Pattern(regexp="^[0-9]{1,10}$" ,message="半角数字で入力してください")
+	
+	@NotBlank(message="Required field")
+	@Pattern(regexp="^[0-9]{1,10}$" ,message="type using half-width digit")
 	private String price;
 	
 	/**
@@ -47,8 +62,10 @@ public class EditForm {
 	/**
 	 * 商品説明
 	 */
-	@NotBlank(message="入力必須です")
-	@Pattern(regexp="^[ -~｡-ﾟ]{1,100000}$", message="半角英数字で入力してください")
+//	@NotBlank(message="入力必須です")
+//	@Pattern(regexp="^[ -~｡-ﾟ]{1,100000}$", message="半角英数字で入力してください")
+	@NotBlank(message="Required field")
+	@Pattern(regexp="^[ -~｡-ﾟ]{1,100000}$", message="type using half-width characters.")
 	private String description;
 	
 	/**
@@ -134,12 +151,22 @@ public class EditForm {
 		this.description = description;
 	}
 
-	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "AddItemForm [name=" + name + ", condition=" + condition + ", category=" + category + ", brand=" + brand
-				+ ", price=" + price + ", shipping=" + shipping + ", description=" + description + ", parent=" + parent
-				+ ", chuCategory=" + chuCategory + "]";
+		return "EditForm [id=" + id + ", name=" + name + ", condition=" + condition + ", category=" + category
+				+ ", brand=" + brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description
+				+ ", parent=" + parent + ", chuCategory=" + chuCategory + "]";
 	}
+
+	
+	
 
 }

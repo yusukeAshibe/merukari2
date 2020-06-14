@@ -30,7 +30,7 @@
 <!-- <script th:src="@{/js/Category.js}"></script> -->
 
 <script type="text/javascript">
-//first page を押したとき１ページ目に戻る
+	//first page を押したとき１ページ目に戻る
 	function first() {
 		console.log("最初のページへ")
 		var page = $('#page').val();
@@ -39,18 +39,18 @@
 
 		form1.submit();
 	}
-//last pageを押したとき最終ページに行く
+	//last pageを押したとき最終ページに行く
 	function last() {
 		console.log("最終ページへ");
 		var page = $('#page').val();
 		var totalPage = $('#totalPage').text();
-		totalpage=Number(totalPage);
-		var lastpage=$('#page').val(totalPage);
+		totalpage = Number(totalPage);
+		var lastpage = $('#page').val(totalPage);
 
 		form1.submit();
 	}
 
-// prevを押したときページを一つ減らす
+	// prevを押したときページを一つ減らす
 	function prev() {
 		console.log("prevpage")
 		var page = $('#page').val();
@@ -83,7 +83,7 @@
 		//console.log(page)
 		form1.submit();
 	}
-//大カテゴリを押したとき
+	//大カテゴリを押したとき
 	function aaaa() {
 		console.log("ffff");
 		$('#chuCategory').val("");
@@ -93,7 +93,7 @@
 		$('#page').val(newPage);
 		form1.submit();
 	}
-//中カテゴリを押したとき
+	//中カテゴリを押したとき
 	function submit2(value) {
 		$('#syoCategory').val("");
 		var page = $('#page').val();
@@ -102,7 +102,7 @@
 		form1.submit();
 
 	}
-//小カテゴリを押したとき
+	//小カテゴリを押したとき
 	function submit3(value) {
 		var page = $('#page').val();
 		var newPage = Number("1");
@@ -114,16 +114,16 @@
 	//	$('#condition').val("");
 	//	
 	//}
-	function sort1(){
+	function sort1() {
 		var a = $('#sortByAmount').val();
 		form1.submit();
-		
+
 	}
 
 	function sort2() {
 		var a = $('#condition').val();
 		$('#condition').val(a);
-		
+
 		var page = $('#page').val();
 		var newPage = Number("1");
 		$('#page').val(newPage);
@@ -133,13 +133,13 @@
 	$(function() {
 		$('#sortPrice').change(function() {
 			$('#sortCondition').val("");
-			
-		//	var sort = $('#sortByAmount').val();
-		//	if(sort!=''){
-		//		$("#conditionSort").prop('disabled', true);
-		//	}else{
-		//		$("#conditionSort").prop('disabled', false);
-		//	}
+
+			//	var sort = $('#sortByAmount').val();
+			//	if(sort!=''){
+			//		$("#conditionSort").prop('disabled', true);
+			//	}else{
+			//		$("#conditionSort").prop('disabled', false);
+			//	}
 			var page = $('#page').val();
 			var newPage = Number("1");
 			$('#page').val(newPage);
@@ -148,12 +148,12 @@
 		$('#sortCondition').change(function() {
 			$('#sortPrice').val("");
 
-				var page = $('#page').val();
-				var newPage = Number("1");
-				$('#page').val(newPage);
-				form1.submit();
-			
-			});
+			var page = $('#page').val();
+			var newPage = Number("1");
+			$('#page').val(newPage);
+			form1.submit();
+
+		});
 
 	});
 </script>
@@ -165,8 +165,8 @@
 			<button type="button" class="navbar-toggle collapsed"
 				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
 				aria-controls="navbar">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
+				<span class="icon-bar"></span> <span class="icon-bar"></span>
+				 <span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus
 				Items</a>
@@ -174,10 +174,10 @@
 		<div id="navbar" class="collapse navbar-collapse">
 			<div>
 				<ul class="nav navbar-nav navbar-right">
-
+					<li><a th:href="@{/cart/showCart}">ShoppingCart&nbsp;<span th:text="${quantity}" style="color:red"></span></a><i class="fa fa-power-off"></i></li>
+					<li><a th:href="@{/orderHistory/showOrderHistory}">OrderHistory</a><i class="fa fa-power-off"></i></li>
 					<li><a id="logout" sec:authorize="hasRole('ROLE_USER')"
 						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
-
 				</ul>
 				<p class="navbar-text navbar-right">
 					<span id="loginName" th:text="${email}">user: userName</span>
@@ -188,33 +188,32 @@
 
 	<div id="main" class="container-fluid">
 		<!-- addItem link -->
+		
+		<!--  div th:text=${countItemInShoppingCart}></div>
+		<div th:text="${quantity}"></div>-->
+		
 		<div id="addItemButton" align="right">
-			<a class="btn btn-default" href="./add.html"
-				th:href="@{/addItem/showAddItem}"><i class="fa fa-plus-square-o"></i>
-				Add New Item</a>
+			<a class="btn btn-default" href="./add.html"　th:href="@{/cart/showCart}"><i class="fa fa-plus-square-o"></i>AddNew Item</a>
 		</div>
 		<!-- 検索フォーム -->
 		<div id="forms">
-			<form name="form1" action="" class="form-inline" role="form"
-				th:action="@{/}" th:object="${searchForm}">
+			<form name="form1" action="" class="form-inline" role="form"　th:action="@{/}" th:object="${searchForm}" method="post">
 
 				<div class="form-group">
-					<input type="text" name="name" th:field="*{name}"
-						class="form-control" id="name" placeholder="item name" />
+					<input type="text" name="name" th:field="*{name}"　class="form-control" id="name" placeholder="item name" />
 				</div>
 				<div class="form-group">
 					<i class="fa fa-plus"></i>
 				</div>
 				<div class="form-group">
-					<select class="form-control" id="parent" name="parent"
-						onchange="aaaa()">
+					<select class="form-control" id="parent" name="parent"onchange="aaaa()">
 						<option value="">- parentCategory -</option>
 						<option th:each="parentCategory : ${parentCategoryList}"
 							th:value="${parentCategory.id}" th:text="${parentCategory.name}"
 							th:id="${parentCategory.id}" th:name="${parentCategory.id}"
-							th:field="*{parent}"><input tepe="hidden" th:name="${parentCategory.id}" th:value="${parentCategory.id}">
+							th:field="*{parent}">
+							<input tepe="hidden"th:name="${parentCategory.id}" th:value="${parentCategory.id}">
 						</option>
-
 					</select>
 					<!-- <form th:action="@{/searchCategory}" method="post"-->
 
@@ -224,7 +223,6 @@
 						<option th:each="category : ${categoryList}"
 							th:value="${category.id}" th:text="${category.name}"
 							th:field="*{chuCategory}">- childCategory -</option>
-
 					</select>
 					<!--/form-->
 					<select class="form-control" id="syoCategory" name="syoCategory"
@@ -233,35 +231,38 @@
 						<option th:each="childCategory : ${childCategoryList}"
 							th:value="${childCategory.id}" th:text="${childCategory.name}"
 							th:field="*{syoCategory}">grandChild1</option>
-
 					</select>
 				</div>
 				<div class="form-group">
 					<i class="fa fa-plus"></i>
 				</div>
 				<div class="form-group">
-					<input type="text" name="brand" th:field="*{brand}" class="form-control" placeholder="brand" />
+					<input type="text" name="brand" th:field="*{brand}"
+						class="form-control" placeholder="brand" />
 				</div>
-				<select name="condition" id="condition" onchange="sort2()">
-						<option th:value="${condition}"
-							th:if="${condition!=null&&condition!=''}" th:text="${condition}"></option>
-						<option value="">--</option>
-						<option th:if="${condition!='brandNew'}" value="brandNew">Brand new</option>
-						<option th:if="${condition!='secondHand'}" value="secondHand">Second
-							hand</option>
-						<option th:if="${condition!='unknown'}" value="unknown">unknown</option>
+				<select class="form-control" name="condition" id="condition"
+					onchange="sort2()" disabled>
+					<option th:value="${condition}"
+						th:if="${condition!=null&&condition!=''}" th:text="${condition}"></option>
+					<option value="">--</option>
+					<option th:if="${condition!='brandNew'}" value="brandNew">brand
+						new</option>
+					<option th:if="${condition!='secondHand'}" value="secondHand">Second
+						hand</option>
+					<option th:if="${condition!='unknown'}" value="unknown">unknown</option>
+					<option th:if="${condition!='bad'}" value="bad">bad</option>
+					<option th:if="${condition!='good'}" value="good">good</option>
 				</select>
 				<button id="button-search" type="submit" class="btn btn-default">
 					<i class="fa fa-angle-double-right"></i>search
 				</button>
-				
+
 
 				<div class="text-right">
 					<input name="page" type="number" min="1" th:field="*{page}">
-					 <span align="right" class="pull-right"> 
-						<span>
-						<button id="button-go" class="btn btn-default">Go</button>
-						</span>
+					<span align="right" class="pull-right"> <span>
+							<button id="button-go" class="btn btn-default">Go</button>
+					</span>
 					</span> /<span th:text="${totalPage}" id="totalPage"></span>
 					<div class="btn btn-default pull-left" th:text="${count}+' items'"></div>
 				</div>
@@ -297,8 +298,9 @@
 				</tr>
 				<th>name</th>
 				<th>price 
-				<select name="sortPrice" id="sortPrice">
-						<option th:value="${priceSort}" th:if="${priceSort!=null&&priceSort!=''}" th:text="${priceSort}"></option>
+				<select  name="sortPrice"style="width:70%" id="sortPrice">
+						<option th:value="${priceSort}"
+							th:if="${priceSort!=null&&priceSort!=''}" th:text="${priceSort}"></option>
 						<option value="">--</option>
 						<option th:if="${priceSort!='Ascending'}" value="Ascending">Ascending
 						</option>
@@ -307,24 +309,23 @@
 				</th>
 				<th>category</th>
 				<th>brand</th>
-				<th>cond 
-				<!-- select name="sortCondition" id="sortCondition">
-						<option th:value="${conditionSort}" th:if="${conditionSort!=null&&conditionSort!=''}" th:text="${conditionSort}"></option>
+				<th>cond <!--  option value="">--</option--> <!-- option th:value="1" th:if="${conditionSort=='1'}" >brand new</option-->
+					<!--  option th:value="2" th:if="${conditionSort=='2'}">second hand</option-->
+					<!--  option th:value="3" th:if="${conditionSort=='3'}" >unknown</option-->
+					<!-- option th:value="4" th:if="${conditionSort=='4'}" >bad</option-->
+					<!--option th:value="5" th:if="${conditionSort=='5'}" >good</option-->
+					<!-- option th:each="condition : ${conditionList}" th:value="${condition.id}" th:text="${condition.name}"></option-->
+					<select style="width:70%" name="sortCondition" id="sortCondition">
+						<option th:value="${conditionSort}"
+							th:if="${conditionSort!=null&&conditionSort!=''}"
+							th:text="${conditionSort}"></option>
 						<option value="">--</option>
-						<option th:if="${conditionSort!='brandNew'}" value="brandNew">BrandNEW</option>
-						<option th:if="${conditionSort!='secondHand'}" value="secondHand">Secondhand</option>
-						<option th:if="${conditionSort!='unknown'}" value="unknown">unknown</option>
-				</select-->
-				<select name="sortCondition" id="sortCondition">
-				<option th:value="1" th:if="${conditionSort=='1'}" >Brand new</option>
-				<option th:value="2" th:if="${conditionSort=='2'}">second hand</option>
-				<option th:value="3" th:if="${conditionSort=='3'}" >unknown</option>
-				<option th:value="4" th:if="${conditionSort=='4'}" >bad</option>
-				<option th:value="5" th:if="${conditionSort=='5'}">good</option>
-				<option value="">--</option>
-				<option th:each="condition : ${conditionList}" th:value="${condition.id}" th:text="${condition.name}"></option>
-				
-				</select>		
+						<option th:if="${conditionSort!='brandnew'}" value="brandnew">brand
+							new</option>
+						<option th:if="${conditionSort!='good'}" value="good">good</option>
+
+
+				</select>
 				</th>
 				<tr th:each="item : ${itemList}">
 					<td><a th:text="${item.name}"

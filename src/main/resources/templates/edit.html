@@ -1,159 +1,186 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- css -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
-  <!-- link rel="stylesheet" href="./mercari.css"/-->
-  <!-- script -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <title>Rakus Items</title>
-   <script type="text/javascript">
-  
-  //　大カテゴリプルダウン選択時に商品の登録ではなく、カテゴリを変えるためのメソッドに遷移（かつ大カテゴリ選択時に中小カテゴリの内容を消す
-  function categoryChange(){
-	  $('#chuCategory').val("");
-	  $('#syoCategory').val("");
-	  var id=$('#id').val();
-	  //document.form1.action="/edit/changeCategory?="+id+;
-	  document.form1.action="/edit/changeCategory";
-	  form1.submit();
-  }
-  //中小カテゴリプルダウン選択時に商品の登録ではなく、カテゴリを変えるためのメソッドに遷移
-  function categoryChange2(){
-	  var id=$('#id').val();
-	  document.form1.action="/edit/changeCategory";
-	  $('#syoCategory').val("");
-	  form1.submit();
-  } 
-  </script>
-  
-  
-  
-  
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<!-- link rel="stylesheet" href="./mercari.css"/-->
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<title>Rakus Items</title>
+<script type="text/javascript">
+	//　大カテゴリプルダウン選択時に商品の登録ではなく、カテゴリを変えるためのメソッドに遷移（かつ大カテゴリ選択時に中小カテゴリの内容を消す
+	function categoryChange() {
+		$('#chuCategory').val("");
+		$('#syoCategory').val("");
+		//var id = $('#id').val();
+		//document.form1.action="/edit/changeCategory?="+id+;
+		document.form1.action = "/edit/changeCategory2";
+		form1.submit();
+	}
+	//中小カテゴリプルダウン選択時に商品の登録ではなく、カテゴリを変えるためのメソッドに遷移
+	function categoryChange2() {
+		//var id = $('#id').val();
+		document.form1.action = "/edit/changeCategory2";
+		$('#syoCategory').val("");
+		form1.submit();
+	}
+</script>
+
+
+
+
 </head>
 <body>
-  <!-- navbar -->
-  <nav class="navbar navbar-inverse">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus Items</a>
-    </div>
-    <div id="navbar" class="collapse navbar-collapse">
-      <div>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a id="logout" hsec:authorize="hasRole('ROLE_USER')" href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
-        </ul>
-        <p class="navbar-text navbar-right">
-          <span id="loginName" th:text="${email}">user: userName</span>
-        </p>
-      </div>
-    </div>
-  </nav>
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus
+				Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a id="logout" hsec:authorize="hasRole('ROLE_USER')"
+						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" th:text="${email}">user: userName</span>
+				</p>
+			</div>
+		</div>
+	</nav>
 
-  <!-- details -->
-  <div id="input-main" class="container">
-    <a type="button" class="btn btn-default" th:href="@{'/showItemDetail?id='+${item.id}}"><i class="fa fa-reply"></i> back</a>
-    <h2>Edit</h2>
+	<!-- details -->
+	<div id="input-main" class="container">
+		<a type="button" class="btn btn-default"
+			th:href="@{'/showItemDetail?id='+${item.id}}"><i
+			class="fa fa-reply"></i> back</a>
+		<h2>Edit</h2>
 
-    <!-- edit form -->
-    <form name="form1" action="#" method="POST" class="form-horizontal">
-        <!-- name -->
-        <div class="form-group">
-          <label for="inputName" class="col-sm-2 control-label">name</label>
-          <div class="col-sm-8">
-         <input  type="text" name="name" th:value="${item.name}" class="form-control" id="inputName" >
-          </div>
-        </div>
-        <!-- price -->
-        <div class="form-group">
-          <label for="price" class="col-sm-2 control-label">price</label>
-          <div class="col-sm-8">
-            <input type="text" name="price" class="form-control" id="price" th:value="${item.price}">
-          </div>
-        </div>
-        <!-- category -->
-        <div class="form-group">
-          <label for="category" class="col-sm-2 control-label">category</label>
-          <div class="col-sm-8">
-              <select class="form-control" id="parent" name="parent" onchange="categoryChange()">
-           	 		<option  th:text="${item.daiName}" th:value="${item.daiCategoryId}"></option>
-           		 <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}"  th:name="${parentCategory.id}" >parentCategory1</option>	
-         	 </select>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="category" class="col-sm-2 control-label"></label>
-          <div class="col-sm-8">
-               <select class="form-control" id="chuCategory" name="chuCategory" onchange="categoryChange2()" >
-            		<option th:text="${item.chuName}" th:value="${item.daiCategoryId}" >-- childCategory --</option>
-            		<option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}" th:name="${category.id}">childCategory1</option>
-          	   </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="category" class="col-sm-2 control-label"></label>
-          <div class="col-sm-8">
-            <select class="form-control">
-              <option>- grandChild -</option>
-              <option>grandChild1</option>
-              <option>grandChild2</option>
-              <option>grandChild3</option>
-              <option>grandChild4</option>
-              <option>grandChild5</option>
-            </select>
-          </div>
-        </div>
-        <!-- brand -->
-        <div class="form-group">
-          <label for="brand" class="col-sm-2 control-label">brand</label>
-          <div class="col-sm-8">
-            <input type="text" th:value="${item.brand}" id="brand" class="form-control" name="brand"/>
-          </div>
-        </div>
-        <!-- condition -->
-        <div class="form-group">
-          <label for="condition" class="col-sm-2 control-label">condition</label>
-          <div class="col-sm-8">
-            <label for="condition1" class="radio-inline">
-              <input type="radio" name="condition" id="condition1" value="1"/> 1
-            </label>
-            <label for="condition2" class="radio-inline">
-              <input type="radio" name="condition" id="condition2" value="2"/> 2
-            </label>
-            <label for="condition3" class="radio-inline">
-              <input type="radio" name="condition" id="condition3" value="3"/> 3
-            </label>
-          </div>
-        </div>
-        <!-- description -->
-        <div class="form-group">
-          <label for="description" class="col-sm-2 control-label">description</label>
-          <div class="col-sm-8">
-            <textarea name="description" id="description" class="form-control" rows="5" th:text="${item.description}"></textarea>
-          </div>
-        </div>
-        <!-- submit button -->
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-          <input type="hidden" name="id" id="id" th:value="${item.id}">
-            <button type="submit" class="btn btn-default">Submit</button>
-          </div>
-        </div>
-      </form>
-    </div>
+		<!-- edit form -->
+		<form name="form1" action="#" method="POST" class="form-horizontal" th:action="@{/edit/item-edit}" th:object="${editForm}">
+			<!-- name -->
+			<div class="form-group">
+				<label for="inputName" class="col-sm-2 control-label">name</label>
+				<div class="col-sm-8">
+					<label for="name" th:errors="*{name}" style="color:red"></label>  
+					<input type="text" name="name" th:value="${item.name}"class="form-control" id="inputName">
+				</div>
+			</div>
+			<!-- price -->
+			<div class="form-group">
+				<label for="price" class="col-sm-2 control-label">price</label>
+				<div class="col-sm-8">
+				  <label for="price" th:errors="*{price}" style="color:red"></label>  
+					<input type="text" name="price" class="form-control" id="price"  th:value="${ #numbers. formatDecimal(item.price ,1, 'COMMA',0,'COMMA' )}">
+					
+				</div>
+			</div>
+			<!-- category -->
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label">category</label>
+				<div class="col-sm-8">
+					<label for="parent" th:errors="*{parent}" style="color:red"></label>  
+      				<label for="category" th:errors="*{category}" style="color:red"></label> 
+					<select class="form-control" id="parent" name="parent" onchange="categoryChange()">
+						<!--  option th:if="${parent==null}" th:text="${item.daiName}" th:value="${item.daiCategoryId}"></option-->
+						<option value="">--</option>
+						<option th:each="parentCategory : ${parentCategoryList}"th:value="${parentCategory.id}" th:text="${parentCategory.name}"th:name="${parentCategory.id}" th:field="*{parent}">parentCategory1</option>
+					</select> </select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<select class="form-control" id="chuCategory" name="chuCategory"
+						onchange="categoryChange2()">
+						<!-- option th:if="${chuCategory==null||('').equals(chuCategory)}" th:text="${item.chuName}" th:value="${item.chuCategoryId}">--childCategory --</option-->
+						<option value="">--</option>
+						<option th:each="category : ${categoryList}"th:value="${category.id}" th:text="${category.name}"th:name="${category.id}" th:field="*{chuCategory}" >childCategory1</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<select class="form-control" id="syoCategory" name="category">
+						<!--  option th:if="${syoCategory==null}" th:text="${item.syoName}" th:value="${item.category}">--grandChild --</option-->
+						<option value="">--</option>
+						<option th:each="childCategory : ${childCategoryList}" th:value="${childCategory.id}" th:text="${childCategory.name}" th:field="*{category}">grandChild1</option>
+					</select>
+				</div>
+			</div>
+			<!-- brand -->
+			<div class="form-group">
+				<label for="brand" class="col-sm-2 control-label">brand</label>
+				<div class="col-sm-8">
+					<label for="brand" th:errors="*{brand}" style="color:red"></label> 	
+					<input type="text" th:value="${item.brand}" id="brand" class="form-control" name="brand" />
+				</div>
+			</div>
+			<!-- condition -->
+			<div class="form-group">
+				<label for="condition" class="col-sm-2 control-label">condition</label>
+				<div class="col-sm-8">
+					<label for="condition" th:errors="*{condition}" style="color:red"></label>  
+					<label for="condition" class="radio-inline"> 
+						<input type="radio" name="condition" id="condition" th:value="1" th:checked="${condition=='1'}">Brand new
+					</label>
+					<label for="condition" class="radio-inline"> 
+						<input type="radio" name="condition" id="condition" th:value="2" th:checked="${condition=='2'}">Second hand
+					</label> 
+					<label for="condition" class="radio-inline"> 
+						<input type="radio" name="condition" id="condition" th:value="3" th:checked="${condition=='3'}"> unknown
+					</label>
+					<label for="condition4" class="radio-inline">
+           				 <input type="radio" name="condition" id="condition" th:value="4" th:checked="${condition=='4'}"> bad
+          			</label>
+          			<label for="condition5" class="radio-inline">
+          				 <input type="radio" name="condition" id="condition" th:value="5" th:checked="${condition=='5'}"> good
+          			</label>
+				</div>
+			</div>
+			<!-- description -->
+			<div class="form-group">
+				<label for="description" class="col-sm-2 control-label">description</label>
+				<div class="col-sm-8">
+					<label for="description" th:errors="*{description}" style="color:red"></label>  
+					<textarea name="description" id="description" class="form-control" rows="5" th:text="${item.description}"></textarea>
+				</div>
+			</div>
+			<!-- submit button -->
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<input type="hidden" name="id" id="id" th:value="${item.id}">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
 </body>
 </html>

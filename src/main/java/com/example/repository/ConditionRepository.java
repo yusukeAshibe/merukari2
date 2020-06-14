@@ -12,12 +12,18 @@ import org.springframework.stereotype.Repository;
 
 import com.example.domain.Condition;
 
+/**
+ * condition情報を扱うレポシトリ－.
+ * @author ashibe
+ *
+ */
 @Repository
 public class ConditionRepository {
 	
 	@Autowired
 	private JdbcTemplate template;
 
+	
 	private final static RowMapper<Condition> CONDITION_ROW_MAPPER = (rs, i) -> {
 		Condition condition = new Condition();
 		condition.setId(rs.getInt("id"));
@@ -25,6 +31,10 @@ public class ConditionRepository {
 		return condition;
 	};
 	
+	/**
+	 * conditionの一覧を返す.
+	 * @return
+	 */
 	public List<Condition> findAll(){
 		String sql="select id,name from condition";
 		List<Condition> conditionList =  template.query(sql, CONDITION_ROW_MAPPER);

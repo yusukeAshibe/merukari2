@@ -16,6 +16,7 @@ import com.example.service.UserService;
 
 /**
  * ユーザ-登録のためのコントローラ.
+ * 
  * @author ashibe
  *
  */
@@ -44,19 +45,25 @@ public class ResisterUserController {
 	 * 
 	 * ユーザー情報を登録
 	 * 
-	 * @param form   
-	 * @param result 
-	 * @return 
+	 * @param form
+	 * @param result
+	 * @return
 	 */
 	@RequestMapping("/register")
-	public String register(@Validated RegisterUserForm form, BindingResult result,RedirectAttributes redirectAttributes,Model model) {
+	public String register(@Validated RegisterUserForm form, BindingResult result,
+			RedirectAttributes redirectAttributes, Model model) {
 		System.out.println(form);
-		User error = userService.findByEmail(form.getEmail());
 
+		User error = userService.findByEmail(form.getEmail());
 		if (!(error == null)) {
-			result.rejectValue("email", "", "このメールアドレスは既に登録されています");
+			result.rejectValue("email", "", "this Email is already resisterd");
 		}
-		
+		if (!(form.getPassword().equals(form.getConfirmationPassword()))) {
+
+			result.rejectValue("password", "", "password mismatch");
+			result.rejectValue("confirmationPassword", "", "");
+		}
+
 		if (result.hasErrors()) {
 			return toRegister(model);
 		}
@@ -68,15 +75,15 @@ public class ResisterUserController {
 
 		return "redirect:/login-user/to-login";
 	}
-		
+
 	/**
 	 * ログイン画面へ遷移
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/toLogin")
 	public String toLogin() {
 		return "redirect:/login-user/to-login";
 	}
-	
 
 }

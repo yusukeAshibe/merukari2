@@ -1,11 +1,8 @@
 package com.example.controller;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,14 +16,13 @@ import com.example.domain.Category;
 import com.example.domain.Condition;
 import com.example.domain.Item;
 import com.example.domain.LoginUser;
-import com.example.domain.Page;
-import com.example.domain.User;
+import com.example.domain.Order;
+import com.example.domain.OrderItem;
 import com.example.form.SearchForm;
 import com.example.service.CategoryService;
 import com.example.service.ConditionService;
 import com.example.service.ItemService;
-import com.example.service.UserService;
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer.FromDecimalArguments;
+import com.example.service.OrderService;
 
 /**
  * アイテム関連の操作をするコントローラ.
@@ -45,18 +41,16 @@ public class ItemController {
 	private CategoryService categoryService;
 
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
 	private ConditionService conditionService;
+
+	@Autowired
+	private OrderService orderService;
 
 	@ModelAttribute
 	public SearchForm setUpSearchForm() {
 		return new SearchForm();
 	}
 
-	
-	
 	/**
 	 * アイテム一覧画面内での挙動関連.
 	 * 
@@ -68,13 +62,35 @@ public class ItemController {
 	@RequestMapping("/")
 	public String showItem(Model model, @Validated SearchForm form, BindingResult result,
 			@AuthenticationPrincipal LoginUser loginUser) {// parentは親カテゴリのID
-		
-		System.out.println(form);
+		// カート内商品数の検索
+		Order order = orderService.showOrder(loginUser.getUser().getId(), 0);
+		if (order != null) {
+			// 商品が一つも入っていない場合、表示の変更（未完了）
+			if (order.getOrderItemList().size() != 0) {
+
+				model.addAttribute("orderItemList", order.getOrderItemList());// オーダー情報の中に入っているカートに追加された商品情報の取得
+
+				// カートに入っている商品の合計個数
+				Integer totalQuantity = 0;
+				for (OrderItem orderItemList : order.getOrderItemList()) {
+					Integer quantity = orderItemList.getQuantity();// 数量
+					totalQuantity += quantity;
+					model.addAttribute("quantity", totalQuantity);
+
+				}
+			}
+		} else {
+
+		}
+		// Integer countItemInShoppingCart
+		// =orderService.CountItemInShoppingCartByUserId(loginUser.getUser().getId());
+
+		// System.out.println(form);
 //		if(form.getPage()==null) {
 //			form.setPage("1");
 //		}
 //		System.out.println(form);
-		
+
 //ページ要素に文字列が入ってきた場合のエラー回避	
 		Integer page;
 		try {
@@ -84,8 +100,7 @@ public class ItemController {
 			page = 1;
 		}
 
-		List<Condition> conditionList= conditionService.findAll();
-
+		List<Condition> conditionList = conditionService.findAll();
 
 		// ユーザーのメルアドレスの表示
 		String userEmail = loginUser.getUser().getEmail();
@@ -96,29 +111,30 @@ public class ItemController {
 				&& form.getSyoCategory() == null && form.getName() == null && form.getName() == null
 				&& form.getPage().equals("1")) {
 			List<Category> parentCategoryList = categoryService.parentCategoryList();
-			Integer count=itemService.countItem(form);
-			Integer totalPage=(count/20);
-			if(count%20!=0) {
-				totalPage=totalPage+1;
+			Integer count = itemService.countItem(form);
+			Integer totalPage = (count / 20);
+			if (count % 20 != 0) {
+				totalPage = totalPage + 1;
 			}
-			if(totalPage<=0) {
-				totalPage=1;
+			if (totalPage <= 0) {
+				totalPage = 1;
 			}
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			List<Item> itemList = new ArrayList<>();
 			form.setPage("1");
-			itemList = itemService.showItem(page,form);
+			itemList = itemService.showItem(page, form);
 			model.addAttribute("itemList", itemList);
-			model.addAttribute("page",page);
-			model.addAttribute("form",form);
-			model.addAttribute("count",count);
-			model.addAttribute("totalPage",totalPage);
-			model.addAttribute("conditionSort",form.getSortCondition());
-			model.addAttribute("priceSort",form.getSortPrice());
-			model.addAttribute("condition",form.getCondition());
-			model.addAttribute("conditionList" ,conditionList);
-			//System.out.println("現在"+page+"ページ目")
-			//System.out.println("初期表示");
+			model.addAttribute("page", page);
+			model.addAttribute("form", form);
+			model.addAttribute("count", count);
+			model.addAttribute("totalPage", totalPage);
+			model.addAttribute("conditionSort", form.getSortCondition());
+			model.addAttribute("priceSort", form.getSortPrice());
+			model.addAttribute("condition", form.getCondition());
+			model.addAttribute("conditionList", conditionList);
+//			model.addAttribute("countItemInShoppingCart",countItemInShoppingCart+" products in your cart");(何種類の商品がカートに入っているか）
+			// System.out.println("現在"+page+"ページ目")
+			// System.out.println("初期表示");
 
 			return "list.html";
 
@@ -156,20 +172,20 @@ public class ItemController {
 		if (form.getName() != null && form.getParent().equals("")) {
 			parentCategoryList = categoryService.parentCategoryList();
 			model.addAttribute("parentCategoryList", parentCategoryList);
-			//System.out.println("大カテゴリの指定がなくなった場合");
+			// System.out.println("大カテゴリの指定がなくなった場合");
 		}
 
 		// 中カテゴリの値の取得 大カテゴリのみが選択された場合(名前選択あり）
 		if (!("").equals(form.getName()) && form.getParent() != null && (("").equals(form.getChuCategory()))) {
 			parentCategoryList = categoryService.parentCategoryList();
-			
+
 			if (!form.getParent().equals("")) {
 				categoryList = categoryService.categoryList(Integer.parseInt(form.getParent()));
-				itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);	
+				itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
 			}
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			model.addAttribute("categoryList", categoryList);
-		//	System.out.println("大カテゴリのみが選択された場合（名前選択あり）");
+			// System.out.println("大カテゴリのみが選択された場合（名前選択あり）");
 
 			// 小カテゴリの値の取得 大中カテゴリが選ばれた場合（名前選択あり）
 		} else if (!("").equals(form.getName()) && form.getParent() != null && !(("")).equals(form.getChuCategory())) {
@@ -177,7 +193,7 @@ public class ItemController {
 			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
 			model.addAttribute("categoryList", categoryList);
 			model.addAttribute("childCategoryList", childCategoryList);
-			//System.out.println("2");
+			// System.out.println("2");
 			System.out.println("大中（小）カテゴリが選ばれた場合（名前選択あり）");
 
 			// 中カテゴリの値の取得 大カテゴリのみが選択された場合(名前選択なし）
@@ -188,14 +204,14 @@ public class ItemController {
 			}
 
 			if (form.getParent().equals("")) {
-				itemList = itemService.showItem(page,form);
+				itemList = itemService.showItem(page, form);
 			} else {
 				itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
-			//	System.out.println("ggggg");
+				// System.out.println("ggggg");
 			}
 			model.addAttribute("parentCategoryList", parentCategoryList);
 			model.addAttribute("categoryList", categoryList);
-			//System.out.println("大カテゴリのみが選択された場合（名前選択なし）");
+			// System.out.println("大カテゴリのみが選択された場合（名前選択なし）");
 
 			// 小カテゴリの値の取得 大中カテゴリが選ばれた場合（名前選択なし）
 		} else if (form.getParent() != null && !(("")).equals(form.getChuCategory())) {
@@ -203,7 +219,7 @@ public class ItemController {
 			childCategoryList = categoryService.childCategoryList(Integer.parseInt(form.getChuCategory()));
 			model.addAttribute("categoryList", categoryList);
 			model.addAttribute("childCategoryList", childCategoryList);
-			//System.out.println("大中カテゴリが選ばれた場合（名前選択なし）");
+			// System.out.println("大中カテゴリが選ばれた場合（名前選択なし）");
 
 		}
 
@@ -215,57 +231,58 @@ public class ItemController {
 
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
 					Integer.parseInt(form.getChuCategory()), Integer.parseInt(form.getSyoCategory()), page, form);
-			
-			//System.out.println("小カテゴリが選ばれた場合（商品表示）");
+
+			// System.out.println("小カテゴリが選ばれた場合（商品表示）");
 
 			// 大中カテゴリの選択をした場合
 		} else if ((form.getParent() != null && (form.getChuCategory() != null && !form.getChuCategory().equals("")))) {
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()),
 					Integer.parseInt(form.getChuCategory()), page, form);
-		
-			//System.out.println("中カテゴリが選ばれた場合（商品表示）");
-			
+
+			// System.out.println("中カテゴリが選ばれた場合（商品表示）");
+
 			// 大カテゴリまでの検索時
 		} else if ((form.getParent() != null && !form.getParent().equals(""))) {
 			itemList = itemService.searchCategoryItem(Integer.parseInt(form.getParent()), page, form);
-			//System.out.println("大カテゴリが選ばれた場合（商品表示）");
-			
-		
+			// System.out.println("大カテゴリが選ばれた場合（商品表示）");
+
 		} else if (form.getName() != null && !("").equals(form.getName())) {
-			itemList=itemService.searchItem(page, form);
-			//System.out.println("名前のみ検索");
+			itemList = itemService.searchItem(page, form);
+			// System.out.println("名前のみ検索");
 		}
-		if(("").equals(form.getName())&&("").equals(form.getParent())&&("").equals(form.getChuCategory())&&("").equals(form.getSyoCategory())&&("").equals(form.getName())&&!(("").equals(form.getBrand()))) {
-			itemList=itemService.searchItem(page, form);
-			//System.out.println("カテゴリのみ検索");
+		if (("").equals(form.getName()) && ("").equals(form.getParent()) && ("").equals(form.getChuCategory())
+				&& ("").equals(form.getSyoCategory()) && ("").equals(form.getName())
+				&& !(("").equals(form.getBrand()))) {
+			itemList = itemService.searchItem(page, form);
+			// System.out.println("カテゴリのみ検索");
 		}
-		
-		
-		
-		//System.out.println(form);
-		Integer count=itemService.countItem(form);
-		//System.out.println(count);
-		Integer totalPage=(count/20);
-		if(count%20!=0) {
-			totalPage=totalPage+1;
+
+		// System.out.println(form);
+		Integer count = itemService.countItem(form);
+		// System.out.println(count);
+		Integer totalPage = (count / 20);
+		if (count % 20 != 0) {
+			totalPage = totalPage + 1;
 		}
-		if(totalPage<=0) {
-			totalPage=1;
+		if (totalPage <= 0) {
+			totalPage = 1;
 		}
-		model.addAttribute("count",count);
-		model.addAttribute("totalPage",totalPage);
+		model.addAttribute("count", count);
+		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("childCategoryList", childCategoryList);
 		model.addAttribute("itemList", itemList);
-		model.addAttribute("page",page);
-		model.addAttribute("form",form);
-		model.addAttribute("conditionSort",form.getSortCondition());
-		model.addAttribute("priceSort",form.getSortPrice());
-		model.addAttribute("condition",form.getCondition());
-		model.addAttribute("conditionList" ,conditionList);
-		//System.out.println("現在"+page+"ページ目");
-		
+		model.addAttribute("page", page);
+		model.addAttribute("form", form);
+		model.addAttribute("conditionSort", form.getSortCondition());
+		model.addAttribute("priceSort", form.getSortPrice());
+		model.addAttribute("condition", form.getCondition());
+		model.addAttribute("conditionList", conditionList);
+		// model.addAttribute("countItemInShoppingCart",countItemInShoppingCart
+		// +"products in your cart");(何種類の商品がカートに入っているか）
+
+		// System.out.println("現在"+page+"ページ目");
 
 //		
 		return "list.html";
@@ -280,7 +297,7 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/showItemDetail")
-	public String showItemDetail(Integer id, Model model,@AuthenticationPrincipal LoginUser loginUser) {
+	public String showItemDetail(Integer id, Model model, @AuthenticationPrincipal LoginUser loginUser) {
 		String userEmail = loginUser.getUser().getEmail();
 		model.addAttribute("email", userEmail);
 		Item item = itemService.showDetail(id);

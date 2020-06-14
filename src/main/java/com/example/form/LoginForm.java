@@ -1,7 +1,5 @@
 package com.example.form;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 /**
  * 入力されたログイン情報を受け取るフォーム.

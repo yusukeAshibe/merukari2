@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.Category;
 import com.example.repository.CategoryRepository;
 
+/**
+ * カテゴリー情報を扱うサービス.
+ * @author ashibe
+ *
+ */
 @Transactional
 @Service
 public class CategoryService {
@@ -16,7 +21,7 @@ public class CategoryService {
 	private CategoryRepository categoryRepository;
 
 	/**
-	 * 親カテゴリ
+	 * 大カテゴリを取得
 	 * 
 	 * @return
 	 */
@@ -26,7 +31,7 @@ public class CategoryService {
 	}
 
 	/**
-	 * 中カテゴリ
+	 * 大カテゴリに対応する中カテゴリを取得
 	 * 
 	 * @param id
 	 * @return
@@ -37,7 +42,7 @@ public class CategoryService {
 	}
 
 	/**
-	 * 小カテゴリ
+	 * 中カテゴリに対応する小カテゴリを取得
 	 * @param parent
 	 * @return
 	 */

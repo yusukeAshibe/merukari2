@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://wwww.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<!--  link rel="stylesheet" href="./mercari.css"/>-->
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus
+				Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+
+					<li><a id="logout" sec:authorize="hasRole('ROLE_USER')"
+						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
+
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" th:text="${email}">user: userName</span>
+				</p>
+			</div>
+		</div>
+	</nav>
+	<div th:if="${orderItemList!=null}">
+		<div class="row">
+			<div class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+				<div class="text-center">
+					<font size="5"> Order Entry </font>
+				</div>
+				<table class="table table-striped" border="1">
+					<tbody>
+						<tr>
+							<th>
+								<div class="text-center">name</div>
+							</th>
+							<th>
+								<div class="text-center">quantity</div>
+							</th>
+
+							<th>
+								<div class="text-center">price</div>
+							</th>
+							<th>
+								<div class="text-center">delete</div>
+							</th>
+						</tr>
+						<div>
+							<tr th:each=" orderItem : ${orderItemList}">
+								<td>
+									<div class="text-center">
+										<span th:text="${orderItem.item.name}">item name</span>
+									</div>
+								</td>
+								<td>
+									<div class="text-center">
+										<span th:text="${orderItem.quantity}">1</span>
+									</div>
+								</td>
+								<td>
+									<div class="text-center" th:text=${orderItem.item.price}>$30</div>
+								<td>
+									<div class="text-center">
+										<form th:action="@{/cart/deleteItem}" method="post">
+											<input type="hidden" th:value="${orderItem.id}"
+												name="orderItemId">
+											<button type="submit" class="btn btn-default">delete</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						</div>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="text-center">
+			<font size="5">Total Quantity&nbsp;<span th:text="${quantity}"></span></font>
+		</div>
+		<div class="text-center">
+			<font size="5">Total Price &nbsp; $<span
+				th:text="${totalprice}"></span></font>
+		</div>
+<br>
+<br>
+
+		<div style="text-align: center">
+			<a class="btn btn-default" th:href="@{/}">Return list of product</a>
+		</div>
+<br>	
+<br>	
+<br>	
+		<form action="" th:object="${orderConfirmForm}" method="post"　th:action="@{/confirm/complete}">
+			<div class="row">
+				<div class="table-responsive col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+					<h3 class="text-center">Shipping Information</h3>
+					<table class="table table-striped" >
+						<tbody>
+							<tr>
+								<td>
+									<div class="text-center">
+										name
+									</div>
+								</td>
+								<td> 
+									<input type="text"name="destinationName" th:field="*{destinationName}">&nbsp;&nbsp;
+									<label for="destinationName"th:errors="*{destinationName}" style="color:red"></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										Email
+									</div>
+								</td>
+								<td>
+									<input type="text"name="destinationEmail" th:field="*{destinationEmail}">&nbsp;&nbsp;
+									<label for="destinationName"th:errors="*{destinationEmail}" style="color:red"></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										zipCode
+									</div>
+								</td>
+								<td>
+									<input type="text" name="destinationZipcode"th:field="*{destinationZipcode}">&nbsp;&nbsp;<!--button  class=" btn btn-default">searchAddress</button>-->
+									<label for="destinationName"th:errors="*{destinationZipcode}" style="color:red"></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										address
+									</div>
+								</td>
+								<td>
+									<input type="text" name="destinationAddress" th:field="*{destinationAddress}">&nbsp;&nbsp;
+									<label for="destinationName"th:errors="*{destinationAddress}" style="color:red"></label>
+									
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										telephone
+									</div>
+								</td>
+								<td>
+									<input type="text"name="destinationTel" th:field="*{destinationTel}">&nbsp;&nbsp;
+									<label for="destinationTel"th:errors="*{destinationTel}" style="color:red"></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										Delivery date and time
+									</div>
+								</td>
+								<td>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-12">
+												<!--  label class="control-label" style="color: red" for="inputPeriod">input Delivery date and time</label>-->
+											</div>
+											<div class="col-sm-5">
+											<label for="delevaryDate" th:errors="*{deliveryDate}" style="color: red"></label><br>
+												<input type="date" name="deliveryDate" id="deliveryDate" class="form-control input-sm" th:field="*{deliveryDate}">
+											</div>
+
+										</div>
+										<div class="row">
+											<div class="col-sm-12">
+											<label for="delevaryTime" th:errors="*{deliveryTime}" style="color: red"></label>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime"value="10" th:checked="${deliveryTime=='10'}">
+													10:00- 
+												</label>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime" value="12" th:checked="${deliveryTime=='12'}">
+													12:00-
+												</label><br>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime" value="14" th:checked="${deliveryTime=='14'}">
+													14:00-
+												</label>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime" value="16" th:checked="${deliveryTime=='16'}">
+													16:00-
+												</label><br>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime" value="18" th:checked="${deliveryTime=='18'}">
+													18:00-
+												</label>
+												<label class="radio-inline">
+													<input type="radio"name="deliveryTime" id="deliveryTime" value="20" th:checked="${deliveryTime=='20'}">
+													20:00-
+												</label><br>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!-- table -->
+			<div class="row">
+			
+				<div class="table-responsive col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+					<h3 class="text-center">Payment Method</h3>
+						<div class="text-center">
+							<label for="paymentMethod" th:errors="*{paymentMethod}" style="color: red"></label>
+						</div>
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td>
+									<div class="text-center">
+										Cash on delivery
+									</div>
+								</td>
+								<td>
+									<div class="row">
+										<div class="text-center">
+											<label class="radio-inline">
+												<input type="radio" name="paymentMethod" value="1" th:checked="${paymentMethod=='1'}">
+												Cash on delivery
+											</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="text-center">
+										Credit card payment
+									</div>
+								</td>
+								<td align="center">
+									<div class="row">
+										<div class="col-sm-12">
+											<label class="radio-inline">
+												<input type="radio" name="paymentMethod" value="2" th:checked="${paymentMethod=='2'}">
+												Credit card 
+											</label><br><br>
+										</div>
+										
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<div class="text-center">
+				<div th:if="${message}" th:text="${message}" style="color:red"></div>
+				<!-- label for="card_namber"th:errors="*{card_number}" style="color: red" ></label><br> -->
+					Card number:<input type="text" name="card_number" th:field="*{card_number}"><br>
+
+					Card expiration date (Year):
+					<select name = "card_exp_year" id="card_exp_year" size="1" >	
+						<option th:checked="${card_exp_year=='2020'}">2020</option>
+						<option th:checked="${card_exp_year=='2021'}">2021</option>
+						<option th:checked="${card_exp_year=='2022'}">2022</option>
+						<option th:checked="${card_exp_year=='2023'}">2023</option>
+						<option th:checked="${card_exp_year=='2034'}">2024</option>
+						<option th:checked="${card_exp_year=='2025'}">2025</option>
+						<option th:checked="${card_exp_year=='2026'}">2026</option>
+					</select><br>
+				 
+					Card expiration date(Month):
+					<select name = "card_exp_month"  id="card_exp_month" size="1">
+						<option th:checked="${card_exp_month=='01'}">01</option>
+						<option th:checked="${card_exp_month=='02'}">02</option>
+						<option th:checked="${card_exp_month=='03'}">03</option>
+						<option th:checked="${card_exp_month=='04'}">04</option>
+						<option th:checked="${card_exp_month=='05'}">05</option>
+						<option th:checked="${card_exp_month=='06'}">06</option>
+						<option th:checked="${card_exp_month=='07'}">07</option>
+						<option th:checked="${card_exp_month=='08'}">08</option>
+						<option th:checked="${card_exp_month=='09'}">09</option>
+						<option th:checked="${card_exp_month=='10'}">10</option>
+						<option th:checked="${card_exp_month=='11'}">11</option>
+						<option th:checked="${card_exp_month=='12'}">12</option>
+					</select><br>
+					<hr>
+					card holder:<input type="text" name="card_name"><br>
+					Card security code :<input type="password" name="card_cvv"><br>
+					<hr>
+				</div>
+			<div class="row">
+				<div class="col-xs-offset-4 col-xs-4">
+					<div class="form-group">
+						<input class="form-control btn btn-default" type="submit" value="Order with this content">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+<br>
+<br>
+<br>
+		
+
+
+	<
+
+</body>
+</html>

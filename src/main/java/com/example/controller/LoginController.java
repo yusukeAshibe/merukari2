@@ -14,49 +14,52 @@ import com.example.form.LoginForm;
 
 /**
  * ログイン操作を行うコントローラー
+ * 
  * @author ashibe
  *
  */
 @Controller
 @RequestMapping("/login-user")
 public class LoginController {
-	
- private HttpSession session;
-	
+
+	private HttpSession session;
+
 	@ModelAttribute
 	public LoginForm setUpLoginForm() {
 		return new LoginForm();
 	}
+
 	/**
 	 * エラーの際、ログイン画面に遷移.
+	 * 
 	 * @param model
 	 * @param error
 	 * @param form
 	 * @return
 	 */
 	@RequestMapping("/to-login")
-	public String toLogin(Model model, @RequestParam(required = false) String error, @Validated LoginForm form, BindingResult result) {
+	public String toLogin(Model model, @RequestParam(required = false) String error, @Validated LoginForm form,
+			BindingResult result) {
 		if (error != null) {
-			model.addAttribute("error", "メールアドレスかパスワードが間違っています ");
+			model.addAttribute("error", "Email or password is wrong");
 		}
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			return "login.html";
 		}
-	
+
 		return "login.html";
 	}
-	
-	
+
 	/**
 	 * ログアウト.
 	 * 
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping("/logout")
 	public String logout() {
 		session.invalidate();
 		return "redirect:/login-user/to-login";
-		
+
 	}
 
 }

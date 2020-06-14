@@ -12,6 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import com.example.domain.User;
 
+/**
+ * ユーザー情報を扱うレポジトリー.
+ * @author ashibe
+ *
+ */
 @Repository
 public class UserRepository {
 	
@@ -23,6 +28,10 @@ public class UserRepository {
 		user.setId(rs.getInt("id"));	
 		user.setEmail(rs.getString("email"));
 		user.setPassword(rs.getString("password"));
+		user.setZipcode(rs.getString("zipcode"));
+		user.setTelephone(rs.getString("telephone"));
+		user.setAddress(rs.getString("address"));
+		user.setName(rs.getString("name"));
 		return user;
 	};
 	
@@ -32,7 +41,7 @@ public class UserRepository {
 	 * @param user ユーザーの情報の入ったオブジェクト
 	 */
 	public void insert(User user) {
-		String sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
+		String sql = "INSERT INTO users (email, password , name , address ,zipcode,telephone) VALUES (:email, :password,:name,:address,:zipcode,:telephone)";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
 		template.update(sql, param);
 
@@ -45,7 +54,7 @@ public class UserRepository {
 	 * @return ユーザーの情報の入ったオブジェクト
 	 */
 	public User findByEmail(String email) {
-		String sql = "select id ,email, password from  users where email=:email";
+		String sql = "select id ,email, password,address,zipcode,name,telephone from  users where email=:email";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
 		List<User> userList = template.query(sql, param, USER_ROW_MAPPER);
 		if (userList.size() == 0) {

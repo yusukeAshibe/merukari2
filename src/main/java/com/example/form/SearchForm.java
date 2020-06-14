@@ -1,7 +1,5 @@
 package com.example.form;
 
-import javax.validation.constraints.Pattern;
-
 /**
  * 入力された検索条件を受け取るフォーム,
  * 

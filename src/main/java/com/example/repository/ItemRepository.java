@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.thymeleaf.util.StringUtils;
 
 import com.example.domain.Item;
+import com.example.form.EditForm;
 import com.example.form.SearchForm;
 
 /**
@@ -30,6 +31,11 @@ public class ItemRepository {
 	@ModelAttribute
 	public SearchForm setUpsearchForm() {
 		return new SearchForm();
+	}
+
+	@ModelAttribute
+	private EditForm setUpEditForm() {
+		return new EditForm();
 	}
 
 	private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
@@ -94,16 +100,20 @@ public class ItemRepository {
 			sql += " AND i.condition=2 ";
 		} else if (form.getCondition().equals("unknown")) {
 			sql += " AND i.condition=3 ";
+		} else if (form.getCondition().equals("bad")) {
+			sql += " AND i.condition=4 ";
+		} else if (form.getCondition().equals("good")) {
+			sql += " AND i.condition=5 ";
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {
-			sql += " order by i.price ,i.name";
+			sql += " order by i.price ,c3.name";
 		} else if (form.getSortPrice().equals("Descending")) {
-			sql += " order by i.price desc ,i.name";
+			sql += " order by i.price desc ,c3.name";
 		}
 //		}else if (form.getSortCondition().equals("brandNew")) {
 //			sql += " order by i.condition ,i.name";
@@ -113,13 +123,21 @@ public class ItemRepository {
 //			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
 //		}
 
-		if (!StringUtils.isEmpty(form.getSortCondition())) {
-			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
-			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		if (!StringUtils.isEmpty(form.getSortCondition())) {
+//			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+//			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		}
+
+		if (!(StringUtils.isEmpty(form.getSortCondition()))) {
+			if (form.getSortCondition().equals("brandnew")) {
+				sql += "order by i.condition,c3.name";
+			} else if (form.getSortCondition().equals("good")) {
+				sql += "order by i.condition desc,c3.name ";
+			}
+
 		}
 
 		sql += " LIMIT 20 offset :offset";
-		System.out.println(sql);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
 		return itemList;
 
@@ -156,7 +174,7 @@ public class ItemRepository {
 
 		MapSqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + form.getName() + "%");
 
-		System.out.println("カテゴリなし");
+		// System.out.println("カテゴリなし");
 		if (!StringUtils.isEmpty(form.getBrand())) {
 			sql += " AND i.brand = :brand";
 			param.addValue("brand", form.getBrand());
@@ -174,18 +192,18 @@ public class ItemRepository {
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {
-			sql += " order by i.price ,i.name";
+			sql += " order by i.price ,c3.name";
 		} else if (form.getSortPrice().equals("Descending")) {
-			sql += " order by i.price desc ,i.name";
-		}	
-		if (!StringUtils.isEmpty(form.getSortCondition())) {
-				sql += " order by i.condition=:condition desc,i.condition asc,i.name";
-				param.addValue("condition", Integer.parseInt(form.getSortCondition()));
-			}
+			sql += " order by i.price desc ,c3.name";
+		}
+//		if (!StringUtils.isEmpty(form.getSortCondition())) {
+//			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+//			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		}
 //		} else if (form.getSortCondition().equals("brandNew")) {
 //			sql += " order by i.condition=1 ,i.name";
 //		} else if (form.getSortCondition().equals("secondHand")) {
@@ -193,39 +211,23 @@ public class ItemRepository {
 //		} else if (form.getSortCondition().equals("unknown")) {
 //			sql += " order by i.condition=3 desc,i.condition asc ,i.name";
 //		}
+		if (!(StringUtils.isEmpty(form.getSortCondition()))) {
+			if (form.getSortCondition().equals("brandnew")) {
+				sql += "order by i.condition c3.name";
+			} else if (form.getSortCondition().equals("good")) {
+				sql += "order by i.condition desc,c3.name ";
+			}
+
+		}
 
 		sql += " LIMIT 20 offset :offset";
 		param.addValue("offset", offset);
 		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER2);
-		System.out.println(sql);
 		return itemList;
 
 	}
 
-	/**
-	 * 
-	 * itemテーブルからIDで1件検索します.
-	 * 
-	 * @param id ID
-	 * @return 商品情報の詰まったオブジェクト.
-	 */
-	public Item load(Integer id) {
 
-		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
-				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
-				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
-				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
-				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
-				+ "c3.name c3_name ,co.name co_name\r\n" + "from items i\r\n"
-				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
-				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
-				+ "where i.id=:id ";
-
-		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER2);
-		return item;
-
-	}
 
 	/**
 	 * 大中小カテゴリ検索
@@ -301,18 +303,26 @@ public class ItemRepository {
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {
-			sql += " order by i.price ,i.name";
+			sql += " order by i.price ,c3.name";
 		} else if (form.getSortPrice().equals("Descending")) {
-			sql += " order by i.price desc ,i.name";
+			sql += " order by i.price desc ,c3.name";
 		}
-		
-		if (!StringUtils.isEmpty(form.getSortCondition())) {
-			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
-			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//
+//		if (!StringUtils.isEmpty(form.getSortCondition())) {
+//			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+//			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		}
+		if (!(StringUtils.isEmpty(form.getSortCondition()))) {
+			if (form.getSortCondition().equals("brandnew")) {
+				sql += " order by i.condition,c3.name";
+			} else if (form.getSortCondition().equals("good")) {
+				sql += " order by i.condition desc ,c3.name";
+			}
+
 		}
 //		
 //		else if (form.getSortCondition().equals("brandNew")) {
@@ -384,19 +394,26 @@ public class ItemRepository {
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {
-			sql += " order by i.price ,i.name";
+			sql += " order by i.price ,c3.name";
 		} else if (form.getSortPrice().equals("Descending")) {
-			sql += " order by i.price desc ,i.name";
-		} else if (form.getSortCondition().equals("brandNew")) {
-			sql += " order by i.condition ,i.name";	
-		} 
-		if (!StringUtils.isEmpty(form.getSortCondition())) {
-			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
-			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+			sql += " order by i.price desc ,c3.name";
+
+//		if (!StringUtils.isEmpty(form.getSortCondition())) {
+//			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+//			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		}
+			if (!(StringUtils.isEmpty(form.getSortCondition()))) {
+				if (form.getSortCondition().equals("brandnew")) {
+					sql += "order by i.condition ,c3.name";
+				} else if (form.getSortCondition().equals("good")) {
+					sql += "order by i.condition desc ,c3.name";
+				}
+
+			}
 		}
 //		else if (form.getSortCondition().equals("secondHand")) {
 //			sql += " order by i.condition=2 desc ,i.condition asc ,i.name";
@@ -461,21 +478,28 @@ public class ItemRepository {
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
-			sql += " order by i.price,i.name";
+			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {
-			sql += " order by i.price ,i.name";
+			sql += " order by i.price ,c3.name";
 		} else if (form.getSortPrice().equals("Descending")) {
-			sql += " order by i.price desc ,i.name";
-		} 
-		
-		if (!StringUtils.isEmpty(form.getSortCondition())) {
-			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
-			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+			sql += " order by i.price desc ,c3.name";
 		}
-		
-		
+
+//		if (!StringUtils.isEmpty(form.getSortCondition())) {
+//			sql += " order by i.condition=:condition desc,i.condition asc,i.name";
+//			param.addValue("condition", Integer.parseInt(form.getSortCondition()));
+//		}
+		if (!(StringUtils.isEmpty(form.getSortCondition()))) {
+			if (form.getSortCondition().equals("brandnew")) {
+				sql += " order by i.condition ,c3.name";
+			} else if (form.getSortCondition().equals("good")) {
+				sql += " order by i.condition desc ,c3.name";
+			}
+
+		}
+
 //		else if (form.getSortCondition().equals("brandNew")) {
 //			sql += " order by i.condition ,i.name";
 //		} else if (form.getSortCondition().equals("secondHand")) {
@@ -490,16 +514,29 @@ public class ItemRepository {
 		return itemList;
 
 	}
-
 	/**
-	 * 商品の追加を行う.
 	 * 
-	 * @param item
+	 * itemテーブルからIDで1件検索します.
+	 * 
+	 * @param id ID
+	 * @return 商品情報の詰まったオブジェクト.
 	 */
-	public void addItem(Item item) {
-		String sql = "insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
-		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
-		template.update(sql, param);
+	public Item load(Integer id) {
+
+		String sql = "SELECT  \r\n" + "i.id i_id,\r\n" + "i.name i_name ,\r\n" + "i.condition i_condition, \r\n"
+				+ "i.category i_category, \r\n" + "i.brand i_brand,\r\n" + "i.price i_price,\r\n"
+				+ "i.shipping i_shipping,\r\n" + "i.description i_description,\r\n" + "c1.id c1_id ,\r\n"
+				+ "c2.id c2_id,\r\n" + "c2.parent c2_parent ,\r\n" + "c1.name_all c1_name_all ,\r\n"
+				+ "c1.name c1_name,\r\n" + "c2.name c2_name,\r\n" + "c3.id c3_id ,\r\n"
+				+ "c3.name c3_name ,co.name co_name\r\n" + "from items i\r\n"
+				+ "left join category c1 on c1.id = i.category\r\n" + "left join category c2 on c1.parent = c2.id \r\n"
+				+ "left join category c3 on c2.parent = c3.id left join condition co on co.id=i.condition\r\n"
+				+ "where i.id=:id ";
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		Item item = template.queryForObject(sql, param, ITEM_ROW_MAPPER2);
+		return item;
+
 	}
 
 	/**
@@ -516,24 +553,24 @@ public class ItemRepository {
 
 		if (!(StringUtils.isEmpty(form.getSyoCategory()))) {
 			System.out.println("小カテゴリの選択" + form);
-			sql += " AND c1.id = :sho";
+			sql += " and c1.id = :sho";
 			param.addValue("sho", Integer.parseInt(form.getSyoCategory()));// 小カテゴリ
 		} else if (!(StringUtils.isEmpty(form.getChuCategory()))) {
-			sql += " AND  c2.id = :chu";
+			sql += " and  c2.id = :chu";
 			param.addValue("chu", Integer.parseInt(form.getChuCategory()));// 中カテゴリ
 		} else if (!(StringUtils.isEmpty(form.getParent()))) {
-			sql += " AND c2.parent = :dai";
+			sql += " and c2.parent = :dai";
 			param.addValue("dai", Integer.parseInt(form.getParent()));// 大カテゴリ
 		}
 
 		// 商品名（あいまい検索）
 		if (!StringUtils.isEmpty(form.getName())) {
-			sql += " AND i.name LIKE :name";
+			sql += " and i.name like :name";
 			param.addValue("name", "%" + form.getName() + "%");
 		}
 		// ブランド名
 		if (!StringUtils.isEmpty(form.getBrand())) {
-			sql += " AND brand = :brand";
+			sql += " and brand = :brand";
 			param.addValue("brand", form.getBrand());
 		}
 		if (form.getCondition() == null) {
@@ -541,14 +578,41 @@ public class ItemRepository {
 		} else if (("").equals(form.getCondition())) {
 			sql += "";
 		} else if (form.getCondition().equals("brandNew")) {
-			sql += " AND i.condition=1";
+			sql += " and i.condition=1";
 		} else if (form.getCondition().equals("secondHand")) {
-			sql += " AND i.condition=2 ";
+			sql += " and i.condition=2 ";
 		} else if (form.getCondition().equals("unknown")) {
-			sql += " AND i.condition=3 ";
+			sql += " and i.condition=3 ";
 		}
 		Integer count = template.queryForObject(sql, param, Integer.class);
 		return count;
+	}
+
+	/**
+	 * 商品の追加.
+	 * 
+	 * @param item
+	 */
+	public void addItem(Item item) {
+		String sql = "insert into items (name,condition,category,brand,price,shipping,description)values(:name,:condition,:category,:brand,:price,:shipping,:description);";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+		template.update(sql, param);
+	}
+
+	/**
+	 * 商品の編集.
+	 * 
+	 * @param item
+	 */
+	public void editItem(Item item) {
+		String sql = "update items set name=:name,price=:price,category=:category,brand=:brand,condition=:condition,description=:description where id=:id";
+		System.out.println(item);
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", item.getId())
+				.addValue("name", item.getName()).addValue("price", item.getPrice())
+				.addValue("category", item.getCategory()).addValue("brand", item.getBrand())
+				.addValue("condition", item.getCondition()).addValue("description", item.getDescription());
+		// SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+		template.update(sql, param);
 	}
 
 }

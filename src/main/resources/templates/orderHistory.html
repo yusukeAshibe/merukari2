@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://wwww.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<!--  link rel="stylesheet" href="./mercari.css"/>-->
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/}" href="./list.html">Rakus Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+
+					<li><a id="logout" sec:authorize="hasRole('ROLE_USER')"
+						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
+
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" th:text="${email}">user: userName</span>
+				</p>
+			</div>
+		</div>
+	</nav>
+	
+
+
+
+
+<!-- table -->
+		<div class="wrapper">
+			<div class="row">
+				<div
+					class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+					<h3 class="text-center" style="margin-bottom: 30px">OrderHistory</h3>
+					<h3 class="text-center" style="margin-bottom: 30px">
+						<span th:if="${history}" th:text="${history}" style="color:blue;margin-bottom: 30px"></span>
+					</h3>
+					<form action="item_list_noodle.html" th:action="@{/}">
+						<div style="margin-left:40%;margin-right:40%;margin-bottom: 30px;">
+							<input class="form-control btn btn-default" type="submit" value="Return list of product">
+						</div>
+					</form>
+					
+					
+					
+					<table class="table table-striped">
+					
+						<tbody>
+							<tr>
+								<th style="width: 140px">
+									<div class="text-center">Order Date</div>
+								</th>
+								<th style="width: 140px">
+									<div class="text-center">Delevery Date</div>
+								</th>
+								<th style="width: 280px">
+									<div class="text-center">Item Name</div>
+								</th>
+								<th style="width: 180px">
+									<div class="text-center">Price</div>
+								</th>
+								<th style="width: 180px">
+									<div class="text-center">Quantity</div>
+								</th>
+								
+								<th style="width: 90px">
+									<div class="text-center">Total Price</div>
+								</th>
+							</tr>
+								<div th:each="order:${orderList}">
+								<tr th:each="orderItem:${order.orderItemList}">
+							
+								<td>
+									<div class="text-center"th:text="${order.orderDate}">yyyy/mm/dd</div>
+								</td>
+								<td>
+									<div class="text-center"th:text="'After '+${#dates.format(order.deliveryTime,'yyyy/MM/dd H:mm')}">yyyy/mm/dd</div>
+								</td>
+								<td><div class="text-center">
+								<a th:text=" ${orderItem.item.name}" th:href="@{'/orderHistory/showItemDetail?id=' + ${orderItem.item.id}}">name</a></div>
+								</td>
+								<td class="text-center">
+									<span th:text="'$'+${orderItem.item.price}">&nbsp;&nbsp;$1000</span>
+								</td>
+								
+								<td class="text-center">
+									<span th:text="${orderItem.quantity}">
+										&nbsp;&nbsp;1個</span><br></td>
+								<td>
+									<div class="text-center" th:text="'$'+${orderItem.quantity * orderItem.item.price}">
+										$1000
+									</div>
+									<div class="text-center">
+								</div>
+								</div>
+								</td>
+								</div>
+								</tr>
+						</tbody>
+					
+						
+					</table>
+					<br>
+					</div>
+					</div>
+					</div>
+					
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-offset-5 col-xs-3">
+					<div class="form-group">
+						
+					</div>
+					
+				</div>
+				
+				
+			</div>
+		</div>
+
+</body>
+</html>

@@ -98,7 +98,7 @@
         <label for="category" class="col-sm-2 control-label">category</label>
         <div class="col-sm-8">
          <label for="parent" th:errors="*{parent}" style="color:red"></label>  
-      <label for="category" th:errors="*{category}" style="color:red"></label> 
+      	 <label for="category" th:errors="*{category}" style="color:red"></label> 
           <select class="form-control" id="parent" name="parent" onchange="categoryChange()" >
             <option  value="99">-- parentCategory --</option>
             <option th:each="parentCategory : ${parentCategoryList}" th:value="${parentCategory.id}" th:text="${parentCategory.name}"  th:name="${parentCategory.id}" th:field="*{parent}">parentCategory1</option>	
@@ -151,13 +151,19 @@
         <div class="col-sm-8">
          <label for="condition1" th:errors="*{condition}" style="color:red"></label>  
           <label for="condition1" class="radio-inline">
-            <input type="radio" name="condition" id="condition1" value="1"/> 1
+            <input type="radio" name="condition" id="condition" value="1" th:checked="${condition=='1'}"> brand new
           </label>
           <label for="condition2" class="radio-inline">
-            <input type="radio" name="condition" id="condition2" value="2"/> 2
+            <input type="radio" name="condition" id="condition" value="2" th:checked="${condition=='2'}"> second hand
           </label>
           <label for="condition3" class="radio-inline">
-            <input type="radio" name="condition" id="condition3" value="3"/> 3
+            <input type="radio" name="condition" id="condition" value="3" th:checked="${condition=='3'}"> unknoun
+          </label>
+          <label for="condition4" class="radio-inline">
+            <input type="radio" name="condition" id="condition" value="4" th:checked="${condition=='4'}"> bad
+          </label>
+          <label for="condition5" class="radio-inline">
+            <input type="radio" name="condition" id="condition" value="5" th:checked="${condition=='5'}"> good
           </label>
         </div>
       </div>

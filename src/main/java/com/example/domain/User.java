@@ -2,49 +2,46 @@ package com.example.domain;
 
 /**
  * ユーザー情報を扱うドメイン.
+ * 
  * @author ashibe
  *
  */
 public class User {
-	
+
 	/**
 	 * ID
 	 */
 	private Integer id;
-	
+
 	/**
 	 * パスワード
 	 */
 	private String password;
-	
+
 	/**
 	 * メールアドレス
 	 */
 	private String email;
-	
+
 	/**
 	 * 名前
 	 */
 	private String name;
-	
+
 	/**
 	 * 郵便番号
 	 */
-	private String zipCode;
-	
+	private String zipcode;
+
 	/**
 	 * 住所
 	 */
 	private String address;
-	
+
 	/**
 	 * 電話番号
 	 */
 	private String telephone;
-	
-	
-	
-	
 
 	public Integer getId() {
 		return id;
@@ -78,12 +75,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getZipCode() {
-		return zipCode;
+	public String getZipcode() {
+		return zipcode;
 	}
 
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
 
 	public String getAddress() {
@@ -104,14 +101,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", password=" + password + ", email=" + email + ", name=" + name + ", zipCode="
-				+ zipCode + ", address=" + address + ", telephone=" + telephone + "]";
+		return "User [id=" + id + ", password=" + password + ", email=" + email + ", name=" + name + ", zipcode="
+				+ zipcode + ", address=" + address + ", telephone=" + telephone + "]";
 	}
-
-	
-
-	
-	
-	
 
 }

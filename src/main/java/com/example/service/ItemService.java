@@ -10,6 +10,12 @@ import com.example.domain.Item;
 import com.example.form.SearchForm;
 import com.example.repository.ItemRepository;
 
+/**
+ * アイテム情報を扱うサービス.
+ * 
+ * @author ashibe
+ *
+ */
 @Service
 @Transactional
 public class ItemService {
@@ -18,19 +24,19 @@ public class ItemService {
 	private ItemRepository itemRepository;
 
 	/**
-	 * 一覧表示.
+	 * 一覧表示.(ページング機能付き）
 	 * 
 	 * @param page
 	 * @return
 	 */
-	public List<Item> showItem(Integer page,SearchForm form) {
+	public List<Item> showItem(Integer page, SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		
-		List<Item> itemList = itemRepository.findAll(offset,form);
+
+		List<Item> itemList = itemRepository.findAll(offset, form);
 		return itemList;
 
 	}
@@ -46,85 +52,105 @@ public class ItemService {
 	}
 
 	/**
-	 * 名前のみの検索.
+	 * 名前のみの検索(ページング機能付き）.
 	 * 
 	 * @param name
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchItem(Integer page,SearchForm form) {
+	public List<Item> searchItem(Integer page, SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.itemList( offset,form);
+		List<Item> itemList = itemRepository.itemList(offset, form);
 		return itemList;
 	}
 
 	/**
-	 * 大中小検索
+	 * 大中小検索(ページング機能付き）
+	 * 
 	 * @param dai
 	 * @param chu
 	 * @param syo
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer syo, Integer page,SearchForm form) {
+	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer syo, Integer page, SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai, chu, syo, offset,form);
+		List<Item> itemList = itemRepository.selectCategory(dai, chu, syo, offset, form);
 		return itemList;
 
 	}
 
 	/**
-	 * 大中検索
+	 * 大中検索(ページング機能付き）
+	 * 
 	 * @param dai
 	 * @param chu
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer page,SearchForm form) {
+	public List<Item> searchCategoryItem(Integer dai, Integer chu, Integer page, SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai, chu, offset,form);
+		List<Item> itemList = itemRepository.selectCategory(dai, chu, offset, form);
 		return itemList;
 
 	}
 
 	/**
-	 * 大検索
+	 * 大検索(ページング機能付き）
+	 * 
 	 * @param dai
 	 * @param page
 	 * @return
 	 */
-	public List<Item> searchCategoryItem(Integer dai, Integer page,SearchForm form) {
+	public List<Item> searchCategoryItem(Integer dai, Integer page, SearchForm form) {
 		Integer offset = 0;
 		if (page != null) {
 			Integer limit = 20;
 			offset = limit * (page - 1);
 		}
-		List<Item> itemList = itemRepository.selectCategory(dai,offset,form);
+		List<Item> itemList = itemRepository.selectCategory(dai, offset, form);
 		return itemList;
 	}
-	
+
 	/**
 	 * 商品の追加.
+	 * 
 	 * @param item
 	 */
 	public void addItem(Item item) {
 		itemRepository.addItem(item);
 	}
-	
-	public Integer countItem(SearchForm form){
+
+	/**
+	 * 商品の編集.
+	 * 
+	 * @param item
+	 */
+	public void EditItem(Item item) {
+		itemRepository.editItem(item);
+	}
+
+	/**
+	 * 商品の数をカウント.
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public Integer countItem(SearchForm form) {
 		Integer count = itemRepository.countItem(form);
 		return count;
 	}
+
 }
