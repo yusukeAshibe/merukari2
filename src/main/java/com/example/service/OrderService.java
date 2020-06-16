@@ -2,13 +2,12 @@ package com.example.service;
 
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import com.example.domain.Order;
-import com.example.repository.ItemRepository;
 import com.example.repository.OrderRepository;
 
 /**
@@ -105,14 +104,15 @@ public class OrderService {
 		return order;
 
 	}
-	
+
 	/**
 	 * ユーザーIdでユーザー情報を扱う.
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Order> orderHistoryFindByUserId(Integer userId){
-		List<Order>orderList = orderRepository.OrderHistoryFindByUserId(userId);
+	public List<Order> orderHistoryFindByUserId(Integer userId) {
+		List<Order> orderList = orderRepository.OrderHistoryFindByUserId(userId);
 		return orderList;
 	}
 
