@@ -3,6 +3,11 @@ package com.example.form;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+/**
+ * 商品追加画面で入力された値を受け取るフォーム.
+ * @author ashibe
+ *
+ */
 public class AddItemForm {
 	
 	/**

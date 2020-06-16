@@ -3,6 +3,11 @@ package com.example.form;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+/**
+ * 商品編集のためのフォーム,
+ * @author ashibe
+ *
+ */
 public class EditForm {
 	
 	/**

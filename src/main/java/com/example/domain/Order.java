@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * order情報を扱うドメイン.
  * @author ashibe
  *
  */

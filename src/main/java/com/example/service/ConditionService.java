@@ -11,6 +11,7 @@ import com.example.repository.ConditionRepository;
 
 /**
  * conditionを扱うサービス.
+ * 
  * @author ashibe
  *
  */
@@ -19,16 +20,16 @@ import com.example.repository.ConditionRepository;
 public class ConditionService {
 	@Autowired
 	private ConditionRepository conditionRepository;
-	
+
 	/**
 	 * condition一覧を取得
+	 * 
 	 * @return
 	 */
-	public List<Condition> findAll(){
-		List<Condition>conditionList= conditionRepository.findAll();
+	public List<Condition> findAll() {
+		List<Condition> conditionList = conditionRepository.findAll();
 		return conditionList;
-		
-		
+
 	}
 
 }

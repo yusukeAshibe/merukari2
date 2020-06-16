@@ -11,6 +11,7 @@ import com.example.repository.CategoryRepository;
 
 /**
  * カテゴリー情報を扱うサービス.
+ * 
  * @author ashibe
  *
  */
@@ -43,6 +44,7 @@ public class CategoryService {
 
 	/**
 	 * 中カテゴリに対応する小カテゴリを取得
+	 * 
 	 * @param parent
 	 * @return
 	 */

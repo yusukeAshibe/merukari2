@@ -1,5 +1,10 @@
 package com.example.domain;
 
+/**
+ * 
+ * @author ashibe
+ *
+ */
 public class Page {
 	
 	

@@ -1,9 +1,20 @@
 package com.example.domain;
 
+/**
+ * conditionを扱うドメイン.
+ * @author ashibe
+ *
+ */
 public class Condition {
 
+	/**
+	 * ID
+	 */
 	private Integer id;
 	
+	/**
+	 * condition名
+	 */
 	private String name;
 
 	@Override
