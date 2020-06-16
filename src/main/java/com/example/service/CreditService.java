@@ -6,9 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.domain.Credit;
-import com.example.form.CreditForm;
 import com.example.form.OrderConfirmForm;
 
+/**
+ * クレジットカードの判定を行うサービス.
+ * @author ashibe
+ *
+ */
 @Service
 @Transactional
 public class CreditService {

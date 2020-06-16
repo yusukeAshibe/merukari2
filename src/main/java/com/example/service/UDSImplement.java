@@ -16,25 +16,26 @@ import com.example.domain.User;
 
 /**
  * EmailがDBと一致していればログイン権限を与える
+ * 
  * @author ashibe
  *
  */
 @Service
 public class UDSImplement implements UserDetailsService {
-	
+
 	@Autowired
 	private com.example.repository.UserRepository UserRepository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-	
+
 		User user = UserRepository.findByEmail(email);
 
-	Collection<GrantedAuthority> authorityList = new ArrayList<>();
-	authorityList.add(new SimpleGrantedAuthority("ROLE_USER")); // ユーザ権限付与
-	System.out.println(authorityList);
-	
-	return new LoginUser(user,authorityList);
+		Collection<GrantedAuthority> authorityList = new ArrayList<>();
+		authorityList.add(new SimpleGrantedAuthority("ROLE_USER")); // ユーザ権限付与
+		System.out.println(authorityList);
+
+		return new LoginUser(user, authorityList);
 
 	}
 }

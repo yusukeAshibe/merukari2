@@ -227,8 +227,6 @@ public class ItemRepository {
 
 	}
 
-
-
 	/**
 	 * 大中小カテゴリ検索
 	 * 
@@ -514,6 +512,7 @@ public class ItemRepository {
 		return itemList;
 
 	}
+
 	/**
 	 * 
 	 * itemテーブルからIDで1件検索します.

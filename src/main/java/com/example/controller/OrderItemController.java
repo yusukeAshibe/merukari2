@@ -1,9 +1,7 @@
 package com.example.controller;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 
 /**
  * 注文を操作するコントローラー.
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/orderItem")
 public class OrderItemController {
-
 
 	@RequestMapping("/showCart")
 	public String showCart() {

@@ -8,25 +8,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.User;
 import com.example.repository.UserRepository;
 
-
 /**
  * ユーザー情報を扱うサービス.
+ * 
  * @author ashibe
  *
  */
 @Service
 @Transactional
 public class UserService {
-	
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-
-	
 
 	/**
 	 * ユーザー情報をDBに登録します.
@@ -34,13 +30,13 @@ public class UserService {
 	 * @param user ユーザー情報が入ったオブジェクト
 	 */
 	public void register(User user) {
-		
+
 		String encodePassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePassword);
-		
+
 		userRepository.insert(user);
 	}
-	
+
 	/**
 	 * メールアドレスからユーザー情報を取得します.
 	 * 
