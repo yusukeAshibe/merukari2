@@ -72,24 +72,48 @@ public class OrderService {
 		Integer count = orderRepository.CountItemInShoppingCartByUserId(userId);
 		return count;
 	}
-	
+
 	/**
 	 * 注文確定時に、orderテーブルの書き換え.
+	 * 
 	 * @param order
 	 */
 	public void Update(Order order) {
 		orderRepository.updateOrder(order);
-		
+
 	}
-	
+
 	/**
-	 * 注文履歴商品を取得
+	 * userIdで注文履歴商品を取得
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Order> showOrderHistory(Integer userId){
-		List<Order>orderHistoryList=orderRepository.OrderHistoryFindByUserId(userId);
+	public List<Order> showOrderHistory(Integer userId) {
+		List<Order> orderHistoryList = orderRepository.OrderHistoryFindByUserId(userId);
 		return orderHistoryList;
+	}
+
+	/**
+	 * orderIdで注文履歴を取得.
+	 * 
+	 * @param orderId
+	 * @return
+	 */
+	public Order orderHistoryDetail(Integer orderId) {
+		Order order = orderRepository.OrderHistoryFindOrderId(orderId);
+		return order;
+
+	}
+	
+	/**
+	 * ユーザーIdでユーザー情報を扱う.
+	 * @param userId
+	 * @return
+	 */
+	public List<Order> orderHistoryFindByUserId(Integer userId){
+		List<Order>orderList = orderRepository.OrderHistoryFindByUserId(userId);
+		return orderList;
 	}
 
 }

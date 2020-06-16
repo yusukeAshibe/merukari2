@@ -55,7 +55,7 @@ public class OrderRepository {
 		Order order = new Order();
 		List<Order> orderList = new ArrayList<>();
 		List<OrderItem> orderItemList = new ArrayList<>();
-		
+
 		int beforeOrderId = 0;// 追加した商品のorderId
 
 		while (rs.next()) {
@@ -133,32 +133,72 @@ public class OrderRepository {
 		List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
 		return orderList;
 	}
-	
+
 	/**
 	 * 注文履歴を取得.
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public List<Order>OrderHistoryFindByUserId(Integer userId){
-		String sql="select o.id o_id,o.user_id o_user_id,o.status o_status,\r\n" + 
-				"o.total_price o_total_price,o.order_date o_order_date,\r\n" + 
+	public List<Order> OrderHistoryFindByUserId(Integer userId) {
+		String sql = "select o.id o_id,o.user_id o_user_id,o.status o_status,\r\n"
+				+ "o.total_price o_total_price,o.order_date o_order_date,\r\n"
+				+ "o.destination_name o_destination_name,\r\n" + "o.destination_email o_destination_email,\r\n"
+				+ "o.destination_zipcode o_destination_zipcode,\r\n"
+				+ "o.destination_address o_destination_address,o.destination_tel o_destination_tel,\r\n"
+				+ "o.delivery_time o_delivery_time,o.payment_method o_payment_method,\r\n"
+				+ "i.id i_id,i.name i_name,i.price i_price,i.category i_category,\r\n"
+				+ "i.brand i_brand,i.condition i_condition,i.shipping i_shipping,\r\n"
+				+ "i.description i_description,oi.id oi_id, oi.item_id oi_item_id,\r\n"
+				+ "oi.order_id oi_order_id,oi.quantity oi_quantity from orders o \r\n"
+				+ "inner join order_items oi ON o.id = oi.order_id left join items i ON oi.item_id = i.id\r\n"
+				+ "where o.user_id =:userId and o.status != 0 order by oi.id ";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		List<Order> orderHistoryList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
+		return orderHistoryList;
+
+	}
+
+	/**
+	 * orderIdで注文履歴を取得.
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public Order OrderHistoryFindOrderId(Integer orderId) {
+		String sql = "select \r\n" + 
+				"o.id o_id,\r\n" + 
+				"o.user_id\r\n" + 
+				"o_user_id,o.status o_status,\r\n" + 
+				"o.total_price o_total_price,\r\n" + 
+				"o.order_date o_order_date,\r\n" + 
 				"o.destination_name o_destination_name,\r\n" + 
 				"o.destination_email o_destination_email,\r\n" + 
 				"o.destination_zipcode o_destination_zipcode,\r\n" + 
-				"o.destination_address o_destination_address,o.destination_tel o_destination_tel,\r\n" + 
-				"o.delivery_time o_delivery_time,o.payment_method o_payment_method,\r\n" + 
-				"i.id i_id,i.name i_name,i.price i_price,i.category i_category,\r\n" + 
-				"i.brand i_brand,i.condition i_condition,i.shipping i_shipping,\r\n" + 
-				"i.description i_description,oi.id oi_id, oi.item_id oi_item_id,\r\n" + 
-				"oi.order_id oi_order_id,oi.quantity oi_quantity from orders o \r\n" + 
-				"inner join order_items oi ON o.id = oi.order_id left join items i ON oi.item_id = i.id\r\n" + 
-				"where o.user_id =:userId and o.status != 0 order by oi.id ";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("userId",userId );
-		List<Order> orderHistoryList= template.query(sql,param,ORDER_RESULT_SET_EXTRACTOR);
-		return orderHistoryList;
-		
-		
-		
+				"o.destination_address o_destination_address,\r\n" + 
+				"o.destination_tel o_destination_tel,\r\n" + 
+				"o.delivery_time o_delivery_time,\r\n" + 
+				"o.payment_method o_payment_method,\r\n" + 
+				"i.id i_id,i.name i_name,\r\n" + 
+				"i.price i_price,i.category i_category,\r\n" + 
+				"i.brand i_brand,i.condition i_condition,\r\n" + 
+				"i.shipping i_shipping,\r\n" + 
+				"i.description i_description,\r\n" + 
+				"oi.id oi_id,\r\n" + 
+				"oi.item_id oi_item_id,\r\n" + 
+				"oi.order_id oi_order_id,\r\n" + 
+				"oi.quantity oi_quantity \r\n" + 
+				"from orders o \r\n" + 
+				"inner join order_items oi ON o.id = oi.order_id \r\n" + 
+				"left join items i ON oi.item_id = i.id\r\n" + 
+				"where o.id = :orderId \r\n" + 
+				"and o.status != 0 ";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId", orderId);
+		List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
+		//System.out.println("リスト：　　　"+orderList);
+		Order order=orderList.get(0);
+		//System.out.println("単品：　　　"+order);
+		return order;
 	}
 
 	/**
@@ -212,11 +252,11 @@ public class OrderRepository {
 		Integer count = template.queryForObject(sql, param, Integer.class);
 		return count;
 	}
-	
 
 	/**
 	 * 注文確定時にorderテーブルの書き換え.
-	 * @param order 
+	 * 
+	 * @param order
 	 */
 	public void updateOrder(Order order) {
 		String sql = "update orders set\r\n" + "status =:status,\r\n" + "total_price = :totalPrice, \r\n"
@@ -228,6 +268,20 @@ public class OrderRepository {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
 		template.update(sql, param);
 
+	}
+	
+	/**
+	 * 注文情報のListの取得(履歴表示.
+	 * @param userId
+	 * @return
+	 */
+	public List <Order> OrderListFindByOrderId(Integer userId){
+		String sql="select * from orders where status !=0 and user_id=userId";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("userId", userId);
+		List<Order> orderList=template.query(sql, param ,ORDER_ROW_MAPPER2);
+		return orderList;
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.domain.Item;
 import com.example.domain.LoginUser;
 import com.example.domain.Order;
+import com.example.domain.OrderItem;
 import com.example.service.ItemService;
 import com.example.service.OrderService;
 
@@ -37,6 +39,8 @@ public class OrderHistoryController {
 		String userEmail = loginUser.getUser().getEmail();
 		model.addAttribute("email", userEmail);
 
+		
+		//
 		List<Order> orderHistoryList = orderService.showOrderHistory(loginUser.getUser().getId());
 
 //		Double price=0.0;
@@ -52,15 +56,24 @@ public class OrderHistoryController {
 //				
 //			}
 //		}
+		System.out.println(orderHistoryList);
 
 		if (ObjectUtils.isEmpty(orderHistoryList)) {
 			model.addAttribute("history", "No order history");
-		}
+		} else {
 
+			for (Order order : orderHistoryList) {
+				model.addAttribute("order", order);
+				System.out.println(order);
+			}
+		}
+		List<Order> orderList = orderService.orderHistoryFindByUserId(loginUser.getUser().getId());
+		System.out.println(orderList);
+		model.addAttribute("order2", orderList);
 		model.addAttribute("deliveryTime");
 		model.addAttribute("orderList", orderHistoryList);
 
-		return "orderHistory";
+		return "orderHistory.html";
 
 	}
 
@@ -73,13 +86,43 @@ public class OrderHistoryController {
 	 */
 	@RequestMapping("/showItemDetail")
 	public String showItemDetail(Integer id, Model model, @AuthenticationPrincipal LoginUser loginUser) {
+		
 		String userEmail = loginUser.getUser().getEmail();
 		model.addAttribute("email", userEmail);
 		Item item = itemService.showDetail(id);
 		model.addAttribute("item", item);
-		// return "detail.html";
-		// 一応作成したorderhistory用html
+		
 		return "orderHistoryDetail.html";
+
+	}
+
+	@RequestMapping("/orderHistoryDetail")
+	public String showOrderHistoryDetail(@AuthenticationPrincipal LoginUser loginUser, Model model, Integer id) {
+		String userEmail = loginUser.getUser().getEmail();
+		model.addAttribute("email", userEmail);
+
+		
+		Order order = orderService.orderHistoryDetail(id);//
+
+		// 合計金額,個数の算出
+		Double totalPrice = 0.0;
+		Integer totalQuantity = 0;
+		for (OrderItem orderItemList : order.getOrderItemList()) {
+			Integer quantity = orderItemList.getQuantity();// 数量
+			Double price = orderItemList.getItem().getPrice();// 個数
+			totalPrice += price * quantity;
+			totalQuantity += quantity;
+		}
+
+		//htmlの表示に利用
+		model.addAttribute("totalPrice", order.getTotalPrice());
+		model.addAttribute("totalQuantity", totalQuantity);
+		model.addAttribute("order", order);
+		model.addAttribute("orderItemList", order.getOrderItemList());
+		Date date = new Date(order.getDeliveryTime().getTime());
+		model.addAttribute("deliveryTime", date);
+
+		return "orderHistoryDetail2.html";
 
 	}
 

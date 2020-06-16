@@ -47,22 +47,19 @@
 
 					<li><a id="logout" sec:authorize="hasRole('ROLE_USER')"
 						href="/logout">Logout&nbsp;<i class="fa fa-power-off"></i></a></li>
-
 				</ul>
 				<p class="navbar-text navbar-right">
 					<span id="loginName" th:text="${email}">user: userName</span>
 				</p>
 			</div>
 		</div>
-</nav>
+	</nav>
+							
+	
+	<div class ="text-center"><font size="5"> Your Order History</font></div>
+	
+	<br>
 
-<h1 class="text-center">Your order has been completed</h1>
-
-<br>
-<br>
-<br>
-
-<h2 class ="text-center"> Your Order</h2>
 		<div class="row">
 			<div class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
 				<div class="text-center">
@@ -82,11 +79,10 @@
 								<div class="text-center">price</div>
 							</th>
 						</tr>
-						<div>
 							<tr th:each=" orderItem : ${orderItemList}">
 								<td>
 									<div class="text-center">
-									<span th:text=" ${orderItem.item.name}" >name</span>
+									<a th:text=" ${orderItem.item.name}" th:href="@{'/orderHistory/showItemDetail?id=' + ${orderItem.item.id}}">name</a></span>
 									</div>
 								</td>
 								<td>
@@ -97,7 +93,6 @@
 								<td>
 									<div class="text-center" th:text=${orderItem.item.price}>$30</div>
 							</tr>
-						</div>
 					</tbody>
 				</table>
 			</div>
@@ -125,7 +120,7 @@
 									</div>
 								</td>
 								<td> 
-									<div th:text="${#dates.format(order.orderDate,'yyyy/MM/dd H:mm')}"></div>
+									<div th:text="${#dates.format(order.orderDate,'yyyy/MM/dd')}"></div>
 					                  
 								</td>
 							</tr>
@@ -148,7 +143,6 @@
 								</td>
 								<td> 
 									<div th:text="${order.destinationName}"></div>
-									
 								</td>
 							</tr>
 							<tr>
@@ -195,7 +189,7 @@
 						</table>
 							<br>
 							<div style="text-align:center">
-								<a class="btn btn-default" th:href="@{/}">Return list of product</a>
+								<a class="btn btn-default" th:href="@{/orderHistory/showOrderHistory}">Return order history</a>
 							</div>
 							
 							
@@ -203,7 +197,7 @@
 							<br>
 							<br>
 
-	
+
 
 </body>
 </html>

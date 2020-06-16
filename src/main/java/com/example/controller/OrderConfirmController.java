@@ -77,6 +77,9 @@ public class OrderConfirmController {
 		if (StringUtils.isEmpty(form.getDestinationTel())) {
 			form.setDestinationTel(userTelephone);
 		}
+
+		String paymentMethod = "2";
+		model.addAttribute("paymentMethod", paymentMethod);
 		// オーダー情報の取得
 		Order order = orderService.showOrder(loginUser.getUser().getId(), 0);
 		System.out.println(order);
@@ -110,7 +113,6 @@ public class OrderConfirmController {
 	@RequestMapping("/complete")
 	public String CompleteOrder(@AuthenticationPrincipal LoginUser loginUser, Model model,
 			@Validated OrderConfirmForm form, BindingResult result) {
-		System.out.println(form);
 
 		// エラー時の選択要素保持
 		String deliveryTime = form.getDeliveryTime();
@@ -119,8 +121,8 @@ public class OrderConfirmController {
 		model.addAttribute("deliveryTime", deliveryTime);
 		model.addAttribute("deliveryDate", deliveryDate);
 		model.addAttribute("paymentMethod", paymentMethod);
-		model.addAttribute("card_exp_year",form.getCard_exp_year());
-		model.addAttribute("card_exp_month",form.getCard_exp_month());
+		model.addAttribute("card_exp_year", form.getCard_exp_year());
+		model.addAttribute("card_exp_month", form.getCard_exp_month());
 
 		// メールアドレスの表示
 		String userEmail = loginUser.getUser().getEmail();
@@ -177,8 +179,7 @@ public class OrderConfirmController {
 		int newtotalprice = totalprice.intValue();
 		order.setTotalPrice(newtotalprice);
 		order.setOrderDate(new Date());
-		// order.setStatus(Integer.parseInt(form.getPaymentMethod()));
-		order.setStatus(9);
+		order.setStatus(Integer.parseInt(form.getPaymentMethod()));
 
 		if ("1".equals(form.getPaymentMethod())) {
 			order.setPaymentMethod(Integer.valueOf(form.getPaymentMethod()));
@@ -187,26 +188,37 @@ public class OrderConfirmController {
 			Credit credit = creditService.service(form);
 			order.setPaymentMethod(Integer.valueOf(form.getPaymentMethod()));
 			if ("error".equals(credit.getStatus())) {
-				System.out.println("失敗");
 				model.addAttribute("message", "Incorrect credit card information");
 				return showOrderConfirm(form, loginUser, model);
+			}
+			if (StringUtils.isEmpty(form.getCard_name())) {
+				model.addAttribute("card_name", "Input Card_name");
+				return showOrderConfirm(form, loginUser, model);
+
 			}
 		}
 		// 購入処理を行う（カートから商品を取り除く）(statusの変更）
 		orderService.Update(order);
 
-		//入力情報の保持
+		// 入力情報の保持
 		model.addAttribute("order", order);
 		model.addAttribute("orderItemList", order.getOrderItemList());
 		model.addAttribute("totalQuantity", totalQuantity);
 		model.addAttribute("totalPrice", totalprice);
 		Date date = new Date(order.getDeliveryTime().getTime());
 		model.addAttribute("deliveryTime", date);
-		model.addAttribute("card_exp_year",form.getCard_exp_year());
-		model.addAttribute("card_exp_month",form.getCard_exp_month());
+		model.addAttribute("card_exp_year", form.getCard_exp_year());
+		model.addAttribute("card_exp_month", form.getCard_exp_month());
 
 		return "orderFinished.html";
 
 	}
+
+//	public String showOrderFinish(@AuthenticationPrincipal LoginUser loginUser, Model model,
+//			@Validated OrderConfirmForm form, BindingResult result) {
+//		
+//		return "orderFinished.html";
+//		
+//	}
 
 }

@@ -107,7 +107,7 @@ public class ItemRepository {
 		}
 
 		if (form.getSortPrice() == null) {
-			sql += " order by i.price,c3.name";
+			sql += " order by i.price,c3.name,c2.name";
 		} else if (("").equals(form.getSortPrice()) && ("").equals(form.getSortCondition())) {
 			sql += " order by i.price,c3.name";
 		} else if (form.getSortPrice().equals("Ascending")) {

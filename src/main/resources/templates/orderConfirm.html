@@ -26,7 +26,47 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+$(function() {
+	$("#credit").css("display","none")	
+	if ($("#paymentMethod").val() == 1){
+		$("#credit").css("display","block")			
+	}else{
+		$("#credit").css("display","none")	
+	}
+	
+})
+	
+
+
+
+
+
+
+	function credit() {
+		var a=$("#paymentMethod").val()
+			if ($("#paymentMethod").val() == 1){
+				$("#credit").css("display","block")			
+			}
+		}
+	
+	function money(){
+		var a=$("#paymentMethod").val()
+		if ($("#paymentMethod").val() == 1){
+			$("#credit").css("display","none")			
+		}
+	}
+	
+	
+
+//カレンダーの設定
+	
+
+
+</script>
 </head>
+
 <body>
 
 	<!-- navbar -->
@@ -260,7 +300,7 @@
 									<div class="row">
 										<div class="text-center">
 											<label class="radio-inline">
-												<input type="radio" name="paymentMethod" value="1" th:checked="${paymentMethod=='1'}">
+												<input type="radio"  id="paymentMethod" name="paymentMethod" value="1" th:checked="${paymentMethod=='1'}" onclick="money()">
 												Cash on delivery
 											</label>
 										</div>
@@ -277,7 +317,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<label class="radio-inline">
-												<input type="radio" name="paymentMethod" value="2" th:checked="${paymentMethod=='2'}">
+												<input type="radio"  id="paymentMethod" name="paymentMethod" value="2" th:checked="${paymentMethod=='2'}" onclick="credit()">
 												Credit card 
 											</label><br><br>
 										</div>
@@ -290,7 +330,7 @@
 				</div>
 			</div>
 			
-			<div class="text-center">
+			<div class="text-center" id="credit" style="display: none;">
 				<div th:if="${message}" th:text="${message}" style="color:red"></div>
 				<!-- label for="card_namber"th:errors="*{card_number}" style="color: red" ></label><br> -->
 					Card number:<input type="text" name="card_number" th:field="*{card_number}"><br>
@@ -322,14 +362,17 @@
 						<option th:checked="${card_exp_month=='12'}">12</option>
 					</select><br>
 					<hr>
-					card holder:<input type="text" name="card_name"><br>
-					Card security code :<input type="password" name="card_cvv"><br>
+					card holder:<input type="text" name="card_name"id="card_name" th:field="*{card_name}"><br>
+					Card security code :<input type="password" name="card_cvv" th:field="*{card_cvv}"><br>
 					<hr>
-				</div>
+			</div>
+			
 			<div class="row">
 				<div class="col-xs-offset-4 col-xs-4">
 					<div class="form-group">
 						<input class="form-control btn btn-default" type="submit" value="Order with this content">
+						<div class="text-center"><span class="text-danger">※Press here to confirm the order&nbsp;&nbsp;&nbsp;&nbsp; Please check order</span></div>						
+
 					</div>
 				</div>
 			</div>
@@ -341,7 +384,6 @@
 		
 
 
-	<
 
 </body>
 </html>

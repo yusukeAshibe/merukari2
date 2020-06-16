@@ -5,10 +5,11 @@
 <title>Insert title here</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- css -->
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-	 rel="stylesheet"
-	 integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-	 crossorigin="anonymous" />
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -61,11 +62,10 @@
 <!-- table -->
 		<div class="wrapper">
 			<div class="row">
-			
-			<a th:href="@{'/orderHistory/orderHistoryDetail?id=51}"></a>
 				<div
 					class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
-					<h3 class="text-center" style="margin-bottom: 30px">OrderHistory</h3>
+					<div class="text-center"><font size="5">OrderHistory</font></div>
+					<br>
 					<h3 class="text-center" style="margin-bottom: 30px">
 						<span th:if="${history}" th:text="${history}" style="color:blue;margin-bottom: 30px"></span>
 					</h3>
@@ -87,10 +87,10 @@
 								<th style="width: 200px">
 									<div class="text-center">Delevery Date</div>
 								</th>
-								<!--th style="width: 200px">
+								<th style="width: 200px">
 									<div class="text-center">Item Name</div>
-								</th-->
-								<!--th style="width: 200px">
+								</th>
+								<th style="width: 200px">
 									<div class="text-center">Price</div>
 								</th>
 								<th style="width: 200px">
@@ -99,21 +99,21 @@
 								
 								<th style="width: 200px">
 									<div class="text-center">Total Price</div>
-								</th>-->
+								</th>
 							</tr>
-								
-								<!--div th:each="order:${orderList}">
-								<tr th:each="orderItem:${order.orderItemList}"-->
-								<tr th:each="order2:${order2}">
+								<div th:each="order:${order}">
+							
+								<tr th:each="orderItem:${order.orderItemList}">
 								<td>
-									<div class="text-center"><a th:text="${order2.orderDate}" th:href="@{'/orderHistory/orderHistoryDetail?id='+${order2.id}}">yyyy/mm/dd</a></div>
+									<div class="text-center"th:text="${order.orderDate}">yyyy/mm/dd</div>
 								</td>
 								<td>
-									<div class="text-center"th:text="'After '+${#dates.format(order2.deliveryTime,'yyyy/MM/dd H:mm')}">yyyy/mm/dd</div>
+									<div class="text-center"th:text="'After '+${#dates.format(order.deliveryTime,'yyyy/MM/dd H:mm')}">yyyy/mm/dd</div>
 								</td>
-								<!--div class="text-center" th:text=" ${orderItem.item.name}">name</div>
-								</td>--
-								<!--td class="text-center">
+								<td><div class="text-center">
+								<a th:text=" ${orderItem.item.name}" th:href="@{'/orderHistory/showItemDetail?id=' + ${orderItem.item.id}}">name</a></div>
+								</td>
+								<td class="text-center">
 									<span th:text="'$'+${orderItem.item.price}">&nbsp;&nbsp;$1000</span>
 								</td>
 								
@@ -127,7 +127,7 @@
 									<div class="text-center">
 								</div>
 								</div>
-								</td>-->
+								</td>
 								</div>
 								</tr>
 						</tbody>
@@ -136,10 +136,12 @@
 					</table>
 					<br>
 					</div>
+					</div>
+					</div>
+					
+					</div>
 				</div>
 			</div>
-					
-					
 
 			<div class="row">
 				<div class="col-xs-offset-5 col-xs-3">
